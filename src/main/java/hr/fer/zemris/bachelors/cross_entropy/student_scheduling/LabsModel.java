@@ -42,12 +42,13 @@ public class LabsModel {
 
 
         if (this.startDistribution == null) {
-            this.startDistribution = new double[labs.size()][students.size()];
-
-
-            for (int i = 0, n = labs.size(); i < n; ++i) {
-                Arrays.fill(this.startDistribution[i], 1.0 / n);
-            }
+            initStartDistribution();
+//            this.startDistribution = new double[labs.size()][students.size()];
+//
+//
+//            for (int i = 0, n = labs.size(); i < n; ++i) {
+//                Arrays.fill(this.startDistribution[i], 1.0 / n);
+//            }
         }
 
 
@@ -59,6 +60,45 @@ public class LabsModel {
             }
 
             labsAtTime.get(labTime).add(i);
+        }
+    }
+
+    private void initStartDistribution() {
+
+        int[][] helpDistribution = new int[labs.size()][students.size()];
+
+        for (int i = 0, n = labs.size(); i < n; ++i) {
+            for (int j = 0, m = students.size(); j < m; ++j) {
+                helpDistribution[i][j] = 10;
+
+                if (students.get(j).hasCollisionWith(labs.get(i))) {
+                    helpDistribution[i][j] -= 5;
+                }
+
+                if (students.get(j).increasesDayDuration(labs.get(i))) {
+                    helpDistribution[i][j] -= 1;
+                }
+
+                if (students.get(j).onFreeDay(labs.get(i))) {
+                    helpDistribution[i][j] -= 1;
+                }
+            }
+        }
+
+        int[] sums = new int[students.size()];
+
+
+        for (int i = 0, n = labs.size(); i < n; ++i) {
+            for (int j = 0, m = students.size(); j < m; ++j) {
+                sums[j] += helpDistribution[i][j];
+            }
+        }
+
+        this.startDistribution = new double[labs.size()][students.size()];
+        for (int i = 0, n = labs.size(); i < n; ++i) {
+            for (int j = 0, m = students.size(); j < m; ++j) {
+                startDistribution[i][j] = ((double) helpDistribution[i][j]) / sums[j];
+            }
         }
 
 
@@ -188,7 +228,7 @@ public class LabsModel {
 
         for (int i = 0, n = students.size(); i < n; ++i) {
             if (students.get(i).hasCollisionWith(labs.get(sample[i]))) {
-                cost += 20_000;
+                cost += 25_000;
             }
 
             if (students.get(i).increasesDayDuration(labs.get(sample[i]))) {
@@ -301,9 +341,11 @@ public class LabsModel {
 
             System.out.println("Ukupan broj kolizija: " + colissionCounter);
             System.out.println("Ukupan broj prepunjenih: " + overfilled);
+            System.out.println("Score: " + solutions.get(0).getCost());
 
             writer.println("Ukupan broj kolizija: " + colissionCounter);
             writer.println("Ukupan broj prepunjenih: " + overfilled);
+            writer.println("Score: " + solutions.get(0).getCost());
 
             writer.println("Smoothing parameter: " + smoothingParameter);
             writer.println("Sample size: " + sampleSize);
@@ -331,7 +373,7 @@ public class LabsModel {
 //    prevaciti u neku sa integerima)
 
 
-    
+
     public static void main(String[] args) throws IOException {
         List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer6/termini.txt", true);
         List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer6/zauzetost.csv");
