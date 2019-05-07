@@ -72,7 +72,7 @@ public class LabsModel {
                 helpDistribution[i][j] = 10;
 
                 if (students.get(j).hasCollisionWith(labs.get(i))) {
-                    helpDistribution[i][j] -= 5;
+                    helpDistribution[i][j] -= 7;
                 }
 
                 if (students.get(j).increasesDayDuration(labs.get(i))) {
@@ -192,10 +192,14 @@ public class LabsModel {
     }
 
     private List<Solution> sample() {
-        List<Solution> solutions = new ArrayList<>(sampleSize);
+        return sample(sampleSize);
+    }
+
+    private List<Solution> sample(int samples) {
+        List<Solution> solutions = new ArrayList<>(samples);
 
         Random rand = new Random();
-        for (int i = 0; i < sampleSize; ++i) {
+        for (int i = 0; i < samples; ++i) {
             int[] sample = new int[students.size()];
 
             for (int j = 0, m = students.size(); j < m; ++j) {
@@ -378,7 +382,7 @@ public class LabsModel {
         List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer6/termini.txt", true);
         List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer6/zauzetost.csv");
 
-        LabsModel model = new LabsModel(300, 50, 0.8, null, studs, labs, 1000);
+        LabsModel model = new LabsModel(300, 50, 0.8, null, studs, labs, 2000);
 
         model.run();
 
