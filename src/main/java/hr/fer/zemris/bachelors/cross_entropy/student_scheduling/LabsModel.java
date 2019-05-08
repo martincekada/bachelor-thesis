@@ -126,7 +126,6 @@ public class LabsModel {
     public void heuristics() {
 
         Collection<List<Integer>> pairs = labsAtTime.values();
-
         for (int i = 0, n = students.size(); i < n; ++i) {
 
             for (List<Integer> pair : pairs) {
@@ -141,10 +140,62 @@ public class LabsModel {
                 for (Integer j : pair) {
                     currentDistribution[j][i] = uniform;
                 }
+            }
+        }
 
+        int[] sample = sample(1).get(0).getSequnce();
+        int[] filled = new int[labs.size()];
+
+        for (int i = 0, n = students.size(); i < n; ++i) {
+            filled[sample[i]]++;
+        }
+
+        List<Integer> overFilledLabs = new ArrayList<>();
+        int[] overfilledCount = new int[labs.size()];
+
+        for (int i = 0, n = labs.size(); i < n; ++i) {
+            overfilledCount[i] = filled[i] - labs.get(i).getMaxStudents();
+
+            if (filled[i] - labs.get(i).getMaxStudents() > 0) {
+                overFilledLabs.add(i);
+            }
+        }
+
+        if (overFilledLabs.size() > 8) return;
+
+        System.out.println("manje od 5 ij je");
+
+        for (int j = 0, m = students.size(); j < m; ++j) {
+            double redistribute = 0;
+
+            for (Integer overfiled : overFilledLabs) {
+                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
+
+                redistribute += currentDistribution[overfiled][j] * (0.05 * reduceCoff);
+
+                currentDistribution[overfiled][j] *= (1 - (0.05 * reduceCoff));
             }
 
+
+            double increment = redistribute / (labs.size() - overFilledLabs.size());
+            for (int i = 0, n = labs.size(); i < n; ++i) {
+                if (overFilledLabs.contains(i)) continue;
+
+                currentDistribution[i][j] += increment;
+            }
         }
+
+//        double[] control = new double[students.size()];
+//        for (int j = 0, m = students.size(); j < m; ++j) {
+//
+//            for (int i = 0, n = labs.size(); i < n; ++i) {
+//                control[j] += currentDistribution[i][j];
+//
+//            }
+//        }
+//
+//        System.out.println(Arrays.toString(control));
+
 
     }
 
@@ -232,7 +283,7 @@ public class LabsModel {
 
         for (int i = 0, n = students.size(); i < n; ++i) {
             if (students.get(i).hasCollisionWith(labs.get(sample[i]))) {
-                cost += 25_000;
+                cost += 40_000;
             }
 
             if (students.get(i).increasesDayDuration(labs.get(sample[i]))) {
