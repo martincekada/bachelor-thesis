@@ -161,29 +161,29 @@ public class LabsModel {
             }
         }
 
-        if (overFilledLabs.size() > 8) return;
-
-        System.out.println("manje od 5 ij je");
-
-        for (int j = 0, m = students.size(); j < m; ++j) {
-            double redistribute = 0;
-
-            for (Integer overfiled : overFilledLabs) {
-                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
-
-                redistribute += currentDistribution[overfiled][j] * (0.05 * reduceCoff);
-
-                currentDistribution[overfiled][j] *= (1 - (0.05 * reduceCoff));
-            }
-
-
-            double increment = redistribute / (labs.size() - overFilledLabs.size());
-            for (int i = 0, n = labs.size(); i < n; ++i) {
-                if (overFilledLabs.contains(i)) continue;
-
-                currentDistribution[i][j] += increment;
-            }
-        }
+//        if (overFilledLabs.size() > -1) return;
+//
+//        System.out.println("manje od 5 ij je");
+//
+//        for (int j = 0, m = students.size(); j < m; ++j) {
+//            double redistribute = 0;
+//
+//            for (Integer overfiled : overFilledLabs) {
+//                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
+//
+//                redistribute += currentDistribution[overfiled][j] * (0.05 * reduceCoff);
+//
+//                currentDistribution[overfiled][j] *= (1 - (0.05 * reduceCoff));
+//            }
+//
+//
+//            double increment = redistribute / (labs.size() - overFilledLabs.size());
+//            for (int i = 0, n = labs.size(); i < n; ++i) {
+//                if (overFilledLabs.contains(i)) continue;
+//
+//                currentDistribution[i][j] += increment;
+//            }
+//        }
 
 //        double[] control = new double[students.size()];
 //        for (int j = 0, m = students.size(); j < m; ++j) {
@@ -347,6 +347,7 @@ public class LabsModel {
 
     private boolean stopCondition() throws IOException {
         if (stopFile.exists()) {
+            stopFile.delete();
             int colissionCounter = 0;
             List<Solution> solutions = sample();
             solutions.sort((s1, s2) -> (Integer.compare(s1.getCost(), s2.getCost())));
@@ -429,11 +430,39 @@ public class LabsModel {
 
 
 
+//    svakako all time best spremati
+//    dodati priority queueue s najboljih X, trivijalno je sa 1 i od toga krenuti
+//    smoothing parametar provjeriti utjecaj
+//    balansiranje ne treba ovisiti o broju za koliko je termin prepunjen
+//    vremenski promjenjiv utjecaj all best (queue)
+
+//    1. uvod (1-2) (pisem na kraju cijelog rada) - struktura
+
+//    2. Pregled podrucja (related work) - problemi rasporedjivanja (vrste), diskusija kako se mogu rjesavati (drugi optimizacijski algoritmi), izrada satnice, rasporeda ispita
+//          - pregled optimizacijskih algoritama (mravlji, iterative sarch, temeljeni na procjenama distribucija
+//          - kod vrsta problma, zadani termini
+//    3. Opis ovog mojeg algoritma - detaljan opis (kao i paper), leading ones problem, moji rezultati
+//    4. Odarbani problem rasporedjivanja (labosi - diglog i oop), konkretan problem i ogranicanje, kako se racuna fitness (kazna)
+//      - kako sam prilagodio algoritam na nas problem
+//          sto sam koristio, koje ideje, inicijalna distribucija, queue, rebalansiranje
+//      - ideja samog algoritma (programsko rjesenje) - ne puno koda (pozvati se na pseudokodove iz prethodnih poglavlja)
+//      - objasniti kako dodjeljujem kaznu
+//      - objasniti queue
+//    5. Ostvareni rezultati i eksperimentalno vrednovanje
+//       - 6 problem (primjera)
+//       - sa/bez heuristika
+//       - parametri
+//    6. zakljucak - pol stranice rekapitulacija
+//                 - daljnji rad, trenutni problemi
+//
+
+
+
     public static void main(String[] args) throws IOException {
         List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer6/termini.txt", true);
         List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer6/zauzetost.csv");
 
-        LabsModel model = new LabsModel(300, 50, 0.8, null, studs, labs, 2000);
+        LabsModel model = new LabsModel(300, 50, 0.5, null, studs, labs, 10000);
 
         model.run();
 
