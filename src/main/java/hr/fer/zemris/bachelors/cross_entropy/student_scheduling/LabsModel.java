@@ -1,6 +1,7 @@
 package hr.fer.zemris.bachelors.cross_entropy.student_scheduling;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import hr.fer.zemris.bachelors.cross_entropy.structures.SolutionsQueue;
 import hr.fer.zemris.bachelors.cross_entropy.structures.Util;
 import hr.fer.zemris.bachelors.cross_entropy.student_scheduling.Solution;
 import hr.fer.zemris.bachelors.cross_entropy.structures.Lab;
@@ -25,13 +26,17 @@ public class LabsModel {
     private final List<Student> students;
     private final List<Lab> labs;
     private static File stopFile = new File("./stop.txt");
+    private int queueSize;
+    private double queueFactor;
+    private SolutionsQueue queue;
+    private Solution bestSolution = new Solution(new int[0], Integer.MAX_VALUE);
 
 
     private Map<String, List<Integer>> labsAtTime = new HashMap<>();
 
 
     public LabsModel(int sampleSize, int Nb, double smoothingParameter, double[][] startDistribution,
-                     List<Student> students, List<Lab> labs, double overfillingCoff) {
+                     List<Student> students, List<Lab> labs, double overfillingCoff, int queueSize, double queueFactor) {
         this.sampleSize = sampleSize;
         this.Nb = Nb;
         this.smoothingParameter = smoothingParameter;
@@ -39,6 +44,10 @@ public class LabsModel {
         this.students = students;
         this.labs = labs;
         this.overfillingCoff = overfillingCoff;
+        this.queueFactor = queueFactor;
+        this.queueSize = queueSize;
+        this.queue = new SolutionsQueue(queueSize, students.size(), labs.size());
+
 
 
         if (this.startDistribution == null) {
@@ -143,25 +152,25 @@ public class LabsModel {
             }
         }
 
-        int[] sample = sample(1).get(0).getSequnce();
-        int[] filled = new int[labs.size()];
-
-        for (int i = 0, n = students.size(); i < n; ++i) {
-            filled[sample[i]]++;
-        }
-
-        List<Integer> overFilledLabs = new ArrayList<>();
-        int[] overfilledCount = new int[labs.size()];
-
-        for (int i = 0, n = labs.size(); i < n; ++i) {
-            overfilledCount[i] = filled[i] - labs.get(i).getMaxStudents();
-
-            if (filled[i] - labs.get(i).getMaxStudents() > 0) {
-                overFilledLabs.add(i);
-            }
-        }
-
-//        if (overFilledLabs.size() > -1) return;
+//        int[] sample = sample(1).get(0).getSequnce();
+//        int[] filled = new int[labs.size()];
+//
+//        for (int i = 0, n = students.size(); i < n; ++i) {
+//            filled[sample[i]]++;
+//        }
+//
+//        List<Integer> overFilledLabs = new ArrayList<>();
+//        int[] overfilledCount = new int[labs.size()];
+//
+//        for (int i = 0, n = labs.size(); i < n; ++i) {
+//            overfilledCount[i] = filled[i] - labs.get(i).getMaxStudents();
+//
+//            if (filled[i] - labs.get(i).getMaxStudents() > 0) {
+//                overFilledLabs.add(i);
+//            }
+//        }
+//
+//        if (overFilledLabs.size() > 5) return;
 //
 //        System.out.println("manje od 5 ij je");
 //
@@ -171,9 +180,9 @@ public class LabsModel {
 //            for (Integer overfiled : overFilledLabs) {
 //                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
 //
-//                redistribute += currentDistribution[overfiled][j] * (0.05 * reduceCoff);
+//                redistribute += currentDistribution[overfiled][j] * (0.05); // * reduceCoff);
 //
-//                currentDistribution[overfiled][j] *= (1 - (0.05 * reduceCoff));
+//                currentDistribution[overfiled][j] *= (1 - (0.05)); // * reduceCoff));
 //            }
 //
 //
@@ -183,8 +192,8 @@ public class LabsModel {
 //
 //                currentDistribution[i][j] += increment;
 //            }
-//        }
-
+////        }
+////
 //        double[] control = new double[students.size()];
 //        for (int j = 0, m = students.size(); j < m; ++j) {
 //
@@ -201,9 +210,13 @@ public class LabsModel {
 
 
     private void update(double[][] newDistribution) {
+        double[][] queueDistribution = queue.getDistribution();
+
         for (int i = 0, n = labs.size(); i < n; ++i) {
             for (int j = 0, m = students.size(); j < m; ++j) {
-                currentDistribution[i][j] = (1.0 - smoothingParameter) * currentDistribution[i][j] + smoothingParameter * newDistribution[i][j];
+                currentDistribution[i][j] = (1.0 - smoothingParameter - queueFactor) * currentDistribution[i][j] +
+                                                                  smoothingParameter * newDistribution[i][j]     +
+                                                                         queueFactor * queueDistribution[i][j];
             }
         }
     }
@@ -217,7 +230,19 @@ public class LabsModel {
         List<Solution> best = solutions.subList(0, Nb);
 
 
-        System.out.println(best.get(0).getCost());
+        if (best.get(0).getCost() < bestSolution.getCost()) {
+            bestSolution = best.get(0);
+        }
+
+        System.out.println(bestSolution.getCost());
+//        System.out.println(best.get(0).getCost());
+
+
+        for (int i = 0; i < queueSize; ++i) {
+            queue.add(best.get(i));
+        }
+
+
 
         int[][] frequences = new int[labs.size()][students.size()];
 
@@ -283,7 +308,7 @@ public class LabsModel {
 
         for (int i = 0, n = students.size(); i < n; ++i) {
             if (students.get(i).hasCollisionWith(labs.get(sample[i]))) {
-                cost += 40_000;
+                cost += 70_000;
             }
 
             if (students.get(i).increasesDayDuration(labs.get(sample[i]))) {
@@ -349,9 +374,7 @@ public class LabsModel {
         if (stopFile.exists()) {
             stopFile.delete();
             int colissionCounter = 0;
-            List<Solution> solutions = sample();
-            solutions.sort((s1, s2) -> (Integer.compare(s1.getCost(), s2.getCost())));
-            int[] solution = solutions.get(0).getSequnce();
+            int[] solution = bestSolution.getSequnce();
 
             File file = new File(Util.withoutSeconds.format(new Date()));
             file.createNewFile();
@@ -397,11 +420,11 @@ public class LabsModel {
 
             System.out.println("Ukupan broj kolizija: " + colissionCounter);
             System.out.println("Ukupan broj prepunjenih: " + overfilled);
-            System.out.println("Score: " + solutions.get(0).getCost());
+            System.out.println("Score: " + bestSolution.getCost());
 
             writer.println("Ukupan broj kolizija: " + colissionCounter);
             writer.println("Ukupan broj prepunjenih: " + overfilled);
-            writer.println("Score: " + solutions.get(0).getCost());
+            writer.println("Score: " + bestSolution.getCost());
 
             writer.println("Smoothing parameter: " + smoothingParameter);
             writer.println("Sample size: " + sampleSize);
@@ -459,12 +482,53 @@ public class LabsModel {
 
 
     public static void main(String[] args) throws IOException {
-        List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer6/termini.txt", true);
-        List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer6/zauzetost.csv");
+        List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer1/termini.txt", true);
+        List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer1/zauzetost.csv");
 
-        LabsModel model = new LabsModel(300, 50, 0.5, null, studs, labs, 10000);
+        LabsModel model = new LabsModel(
+                300, 50, 0.3, null, studs, labs, 10_000,
+                30, 0.5
+        );
 
         model.run();
+//
+//        SolutionsQueue q = new SolutionsQueue(5, 5, 5);
+//
+//        q.add(new Solution(new int[]{1, 2, 3, 4, 0}, 50));
+//        q.add(new Solution(new int[]{1, 2, 3, 4, 0}, 10));
+//        q.add(new Solution(new int[]{1, 2, 3, 4, 0}, 30));
+//        q.add(new Solution(new int[]{1, 2, 3, 4, 0}, 20));
+//        q.add(new Solution(new int[]{1, 2, 3, 4, 0}, 10));
+//        q.add(new Solution(new int[]{0, 0, 0, 0, 0}, 200));
+//        q.add(new Solution(new int[]{0, 0, 0, 0, 0}, 60));
+//        q.add(new Solution(new int[]{0, 0, 0, 0, 0}, 10));
+
+//        double[][] d = q.getDistribution();
+//
+//        for (int i = 0; i < 5; i++) {
+//            for (int j = 0; j < 5; ++j) {
+//                System.out.print(" " + d[i][j] + " ");
+//            }
+//
+//            System.out.println();
+//        }
+////
+//        List<Solution> l = new ArrayList<>();
+////
+//        l.add(new Solution(new int[]{1, 2, 3, 4, 0}, 50));
+//        l.add(new Solution(new int[]{1, 2, 3, 4, 0}, 40));
+//        l.add(new Solution(new int[]{1, 2, 3, 4, 0}, 30));
+//        l.add(new Solution(new int[]{1, 2, 3, 4, 0}, 20));
+//        l.add(new Solution(new int[]{1, 2, 3, 4, 0}, 10));
+//        l.add(new Solution(new int[]{0, 0, 0, 0, 0}, 5));
+//
+//
+//        l.sort((s1, s2) -> (Integer.compare(s1.getCost(), s2.getCost())));
+//
+//        for (Solution s : l) {
+//            System.out.println(s.getCost());
+//        }
+
 
     }
 
