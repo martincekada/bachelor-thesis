@@ -465,6 +465,7 @@ public class LabsModel {
 //          - pregled optimizacijskih algoritama (mravlji, iterative sarch, temeljeni na procjenama distribucija
 //          - kod vrsta problma, zadani termini
 //    3. Opis ovog mojeg algoritma - detaljan opis (kao i paper), leading ones problem, moji rezultati
+    // - mozda pokazati slicnost s mravljim algoritmom
 //    4. Odarbani problem rasporedjivanja (labosi - diglog i oop), konkretan problem i ogranicanje, kako se racuna fitness (kazna)
 //      - kako sam prilagodio algoritam na nas problem
 //          sto sam koristio, koje ideje, inicijalna distribucija, queue, rebalansiranje
@@ -476,7 +477,7 @@ public class LabsModel {
 //       - sa/bez heuristika
 //       - parametri
 //    6. zakljucak - pol stranice rekapitulacija
-//                 - daljnji rad, trenutni problemi
+//                 - daljnji rad, trenutni problemi (paralelizacija svega toga da bi bilo brze)
 //
 
 
