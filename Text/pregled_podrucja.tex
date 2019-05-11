@@ -1,0 +1,48 @@
+Problemi raspoređivanja su specijalizacija transportnih problema te su jedni od temeljnih optimiziacijskih problema.
+Općenito gledano, problemi raspoređivanja bi se mogli definirati na sljedeći način:
+Problem se sastoji od agenata i od zadataka. Svakom agentu može biti dodjeljen bilo koji od zadataka uz određenu cijenu, a cijena
+može varirati ovisno o uparivanju agenta i zadatka. Potrebno je svakom agentu dodijeliti zadadatak tako da ukupna cijena dodjeljivanja
+bude minimalna.
+
+Ovakvi problemi bi se mogli pokušati rješiti na način da se generira svaka kombinacija dodjeljivanja agenata i zadataka te da se
+odredi dodjeljivanje s najmanjom cijenom. Ukoliko bi se dodjeljivanje vršilo za _n_ agenata i _n_ zadataka, složenost dodjeljivanja bi bila
+_n!_. Porastom broja _n_ vrijeme potrebno da se na ovaj način odredi dodjeljivanje s najmanjom cijenom vrlo brzo postaje preveliko da bi se
+izračunalo u realnom vremenu. Zbog toga kod problema raspoređivanja (i općenito optimizacijskih problema) ne tražimo iscrpno optimlano rješenje,
+nego različitim pristupima pokušavamo pronaći dovoljno dobro rješenje. U nastavku slijedi opis nekih specifičnih problema raspoređivanja.
+
+1. Primjer 1 (http://java.zemris.fer.hr/nastava/pioa/knjiga-0.1.2013-12-30.pdf)
+Zadana je funkcija g(x, y, z) nad domenom [−300, 500] × [−300, 500] × [−300, 500] ⊂
+R × R × R. Pronaći točku (x, y, z) za koju funkcija g poprima maksimalnu vrijednost.
+
+2. Izrada satnice rasporeda
+Satničaru su na raspolaganju popis kolegija koji se predaju, popis studenata i njihov izbor kolegija, popis slobodnih dvorana i termina,
+željeni tjedni broj predavanja za svaki od kolegija te popis nastavnika koji predaju određene kolegije. Satničar treba zadovoljiti
+slijedeće uvijete:
+  - Svi studenti imaju zakazana sva predavanja i mogu ih slušati bez kolizija
+  - Niti jedan nastavnik ne drži više predavanja istovremeno
+  - Niti ujednu dvoranu ne smije biti smješteno više studenata nego što je kapacitet dvorane
+  - Niti ujednu prostoriju ne smiju biti smještena dva predavanja istovremeno
+
+Također, bilo bi poželjno kada bi satničar osigurao da:
+  - Student u danu ima barem dva predavanja ili niti jedno
+  - Student ima minimalan broj rupa u danu
+  - Nastavnik ima minimalan broj rupa u danu
+  - Nastavnik ima minimalan broj promjena dvorana u danu
+
+
+
+3. Izrada rasporeda međuispita (http://ferko.fer.hr/ferko/EPortfolio!dlFile.action?id=78)
+Primjer u nastavku je pojednostavljen i prilagođen organizaciji međuispita na Fakultetu Elektrotehnike i računarstva.
+Prilikom izrade ispita dostupni su podaci o predmetima za koje treba održati ispit, podaci o slobodnim terminima te
+podaci o studentima i ispitima kojima oni mogu pristupiti. Poterbno je izraditi raspored međuispita tako da niti jedan
+student ne piše istovremeno dva ispita, da svaki student može pristupiti svakom svojem ispitu
+te tako da se niti u jednoj dvorani ne pišu istovremeno dva ispita. Bilo bi poželjno
+da student ima što ravnomjernije raspoređen broj slobodnih dana između ispita.
+
+
+
+
+Na prethodnim primjerima se može primjetiti da se neki od uvjeta moraju ispuniti, dok su neka samo poželjna. To su tvrda
+(engl. hard) i meka (engl. soft) ograničenja (engl. constraints). Tvrda ograničenja moraju biti ispunjena kako bi rješenje bilo
+prihvatljivo (npr. u primjeru 2 ne može konačno rješenje biti ono u kojem nastavnik istovremeno predaje u dva termina). S druge strane,
+meka ograničenja nisu obavezna, ali što su ona ispunjenija, to je rješenje bolje.
