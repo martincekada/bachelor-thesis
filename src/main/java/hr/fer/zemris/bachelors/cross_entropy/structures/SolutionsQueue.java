@@ -13,6 +13,8 @@ public class SolutionsQueue {
     private int studentsSize;
     private int labsSize;
 
+    private int updateCounter;
+
 
     public SolutionsQueue(int size, int studentsSize, int labsSize) {
         this.size = size;
@@ -27,7 +29,14 @@ public class SolutionsQueue {
         if (updated) {
             recalculateDistribution();
             updated = false;
+            System.out.println(updateCounter);
+            updateCounter = 0;
+
+
         }
+
+
+
         return distribution;
     }
 
@@ -36,12 +45,14 @@ public class SolutionsQueue {
         if (solutions.size() < size) {
             solutions.add(candidate);
             updated = true;
+            updateCounter++;
         } else {
             if (solutions.peek().getCost() > candidate.getCost()) {
 
                 solutions.poll();
                 solutions.add(candidate);
                 updated = true;
+                updateCounter++;
 
             }
         }

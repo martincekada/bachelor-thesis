@@ -152,33 +152,33 @@ public class LabsModel {
             }
         }
 
-//        int[] sample = sample(1).get(0).getSequnce();
-//        int[] filled = new int[labs.size()];
-//
-//        for (int i = 0, n = students.size(); i < n; ++i) {
-//            filled[sample[i]]++;
-//        }
-//
-//        List<Integer> overFilledLabs = new ArrayList<>();
-//        int[] overfilledCount = new int[labs.size()];
-//
-//        for (int i = 0, n = labs.size(); i < n; ++i) {
-//            overfilledCount[i] = filled[i] - labs.get(i).getMaxStudents();
-//
-//            if (filled[i] - labs.get(i).getMaxStudents() > 0) {
-//                overFilledLabs.add(i);
-//            }
-//        }
-//
-//        if (overFilledLabs.size() > 5) return;
-//
-//        System.out.println("manje od 5 ij je");
-//
+        int[] sample = sample(1).get(0).getSequnce();
+        int[] filled = new int[labs.size()];
+
+        for (int i = 0, n = students.size(); i < n; ++i) {
+            filled[sample[i]]++;
+        }
+
+        List<Integer> overFilledLabs = new ArrayList<>();
+        int[] overfilledCount = new int[labs.size()];
+
+        for (int i = 0, n = labs.size(); i < n; ++i) {
+            overfilledCount[i] = filled[i] - labs.get(i).getMaxStudents();
+
+            if (filled[i] - labs.get(i).getMaxStudents() > 0) {
+                overFilledLabs.add(i);
+            }
+        }
+
+        if (overFilledLabs.size() > 5) return;
+
+        System.out.println("overfillanih je: " + overFilledLabs.size());
+
 //        for (int j = 0, m = students.size(); j < m; ++j) {
 //            double redistribute = 0;
 //
 //            for (Integer overfiled : overFilledLabs) {
-//                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
+////                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
 //
 //                redistribute += currentDistribution[overfiled][j] * (0.05); // * reduceCoff);
 //
@@ -192,7 +192,7 @@ public class LabsModel {
 //
 //                currentDistribution[i][j] += increment;
 //            }
-////        }
+//        }
 ////
 //        double[] control = new double[students.size()];
 //        for (int j = 0, m = students.size(); j < m; ++j) {
@@ -210,13 +210,13 @@ public class LabsModel {
 
 
     private void update(double[][] newDistribution) {
-        double[][] queueDistribution = queue.getDistribution();
+//        double[][] queueDistribution = queue.getDistribution();
 
         for (int i = 0, n = labs.size(); i < n; ++i) {
             for (int j = 0, m = students.size(); j < m; ++j) {
                 currentDistribution[i][j] = (1.0 - smoothingParameter - queueFactor) * currentDistribution[i][j] +
-                                                                  smoothingParameter * newDistribution[i][j]     +
-                                                                         queueFactor * queueDistribution[i][j];
+                                                                  smoothingParameter * newDistribution[i][j]; //     +
+//                                                                         queueFactor * queueDistribution[i][j];
             }
         }
     }
@@ -239,7 +239,7 @@ public class LabsModel {
 
 
         for (int i = 0; i < queueSize; ++i) {
-            queue.add(best.get(i));
+//            queue.add(best.get(i));
         }
 
 
@@ -485,12 +485,12 @@ public class LabsModel {
 
 
     public static void main(String[] args) throws IOException {
-        List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer1/termini.txt", true);
-        List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer1/zauzetost.csv");
+        List<Lab> labs = parseLabs(         "./src/main/resources/primjeri/primjer6/termini.txt", true);
+        List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer6/zauzetost.csv");
 
         LabsModel model = new LabsModel(
-                300, 50, 0.3, null, studs, labs, 10_000,
-                30, 0.5
+                300, 50, 0.6, null, studs, labs, 10_000,
+                1, 0.0
         );
 
         model.run();
