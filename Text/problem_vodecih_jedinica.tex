@@ -1,0 +1,34 @@
+Kako bi se bolje prikazalo ponašanje konstruktivnog optimizacijskog algoritma, u nastavku je razmatrana primjena algoritma na
+problem vodeće jedinice (engl. LeadingOne). Problem se sastoji od generiranja niza nula i jedinica s ciljem maksimiziranja broja početnih jedinica. Optimalno
+rješenje je ono u kojem se niz sastoji isključivo od jedinica. Prateći notaciju iz prethodnih poglavlja, problem se može formalizirati tako da
+je abeceda znakova A = {0, 1}, skup svih rješenja S = {0, 1}^L te funkcija kazne:
+f(s) = suma umnozaka si, za s = (s1,...,sL)
+Minimiziranjem kazne, broj početnih uzastopnih jedinica se maksimizira.
+Definirajmo dodatno τ kao prvu iteraciju u kojoj se pronalazi optimalno rješenje:
+τ : = min{t ≥ 0 | Xt ∩ S∗ = ∅}
+pri čemu je Xt =  {X(1),...,X(N) t } skup svih rješenja uzorkovanih u iteraciji t.
+
+U poglavlju 3, teoremu 2 rada se tvrdi da uz odabir konstantnog parametra izglađivanja Qt = Q, veličine uzorka N = L^(2 + eps), a eps > 0 i
+Nb = floor(βN) za 0 < β < 3e∞m=11 −(1 − )m. Uz početnu distribuciju PI0(1, i) ≡ 1/2, odnosno jednoliku distribuciju, za prethodno definirani
+problem vodeće jedinice vrijedi P(τ < L) → 1 as L → ∞.
+
+Ovaj teorem je ekspermintalno provjeren sa sljedećim rezultatima:
+
+Tablica 1. Utjecaj duljine uzorka L na broj iteracija (eps = 0.5, β = 0.09)
+
+Iz tablice 1. je vidljivo da je broj iteracija potrebnih da rješenje konvengira u 1 manje od L za svaku testiranu duljinu rješenja. Prema dobivenim rezultatima
+se naslućuje da bi daljnjim rastom broja L teorem i dalje bio zadovoljen.
+
+
+
+
+
+
+
+U svim navedenim testovima uvjet zaustavljanja je bio da vjerojatnost p da se na poziciji i uzorkuje jedinica bude veća od 0.999:
+p(1, i) > 0.999, za svaki  i element {0,..., L-1}
+
+
+
+
+za svaku vrijednost je vršeno 30 testova
