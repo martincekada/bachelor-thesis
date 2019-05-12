@@ -1,13 +1,13 @@
-Problemi raspoređivanja su specijalizacija transportnih problema te su jedni od temeljnih optimiziacijskih problema.
+Problemi raspoređivanja su specijalizacija transportnih problema te su jedni od temeljnih optimizacijskih problema.
 Općenito gledano, problemi raspoređivanja bi se mogli definirati na sljedeći način:
-Problem se sastoji od agenata i zadataka. Svakom agentu može biti dodjeljen bilo koji od zadataka uz određenu cijenu, a cijena
-može varirati ovisno o uparivanju agenta i zadatka. Potrebno je svakom agentu dodijeliti zadadatak tako da ukupna cijena dodjeljivanja
+Problem se sastoji od agenata i zadataka. Svakom agentu može biti dodijeljen bilo koji od zadataka uz određenu cijenu, a cijena
+može varirati ovisno o uparivanju agenta i zadatka. Potrebno je svakom agentu dodijeliti zadatak tako da ukupna cijena dodjeljivanja
 bude minimalna.
 
-Ovakvi problemi bi se mogli pokušati rješiti na način da se generira svaka kombinacija dodjeljivanja agenata i zadataka te da se
+Ovakvi problemi bi se mogli pokušati riješiti tako da se generira svaka kombinacija dodjeljivanja agenata i zadataka te da se
 odredi dodjeljivanje s najmanjom cijenom. Ukoliko bi se dodjeljivanje vršilo za _n_ agenata i _n_ zadataka, složenost dodjeljivanja bi bila
 _n!_. Porastom broja _n_ vrijeme potrebno da se na ovaj način odredi dodjeljivanje s najmanjom cijenom vrlo brzo postaje preveliko da bi se
-izračunalo u realnom vremenu. Zbog toga kod problema raspoređivanja (i općenito optimizacijskih problema) ne tražimo iscrpno optimlano rješenje,
+izračunalo u realnom vremenu. Zbog toga kod problema raspoređivanja (i općenito optimizacijskih problema) ne tražimo iscrpno optimalno rješenje,
 nego različitim pristupima pokušavamo pronaći dovoljno dobro rješenje. U nastavku slijedi opis nekih specifičnih problema raspoređivanja.
 
 1. Primjer 1 (http://java.zemris.fer.hr/nastava/pioa/knjiga-0.1.2013-12-30.pdf)
@@ -17,7 +17,7 @@ R × R × R. Pronaći točku (x, y, z) za koju funkcija g poprima maksimalnu vri
 2. Izrada satnice rasporeda
 Satničaru su na raspolaganju popis kolegija koji se predaju, popis studenata i njihov izbor kolegija, popis slobodnih dvorana i termina,
 željeni tjedni broj predavanja za svaki od kolegija te popis nastavnika koji predaju određene kolegije. Satničar treba zadovoljiti
-slijedeće uvijete:
+sljedeće uvjete:
   - Svi studenti imaju zakazana sva predavanja i mogu ih slušati bez kolizija
   - Niti jedan nastavnik ne drži više predavanja istovremeno
   - Niti ujednu dvoranu ne smije biti smješteno više studenata nego što je kapacitet dvorane
@@ -34,12 +34,12 @@ Također, bilo bi poželjno kada bi satničar osigurao da:
 3. Izrada rasporeda međuispita (http://ferko.fer.hr/ferko/EPortfolio!dlFile.action?id=78)
 Primjer u nastavku je pojednostavljen i prilagođen organizaciji međuispita na Fakultetu Elektrotehnike i računarstva.
 Prilikom izrade ispita dostupni su podaci o predmetima za koje treba održati ispit, podaci o slobodnim terminima te
-podaci o studentima i ispitima kojima oni mogu pristupiti. Poterbno je izraditi raspored međuispita tako da niti jedan
+podaci o studentima i ispitima kojima oni mogu pristupiti. Potrebno je izraditi raspored međuispita tako da niti jedan
 student ne piše istovremeno dva ispita, da svaki student može pristupiti svakom svojem ispitu
 te tako da se niti u jednoj dvorani ne pišu istovremeno dva ispita. Bilo bi poželjno
 da student ima što ravnomjernije raspoređen broj slobodnih dana između ispita.
 
-Na prethodnim primjerima se može primjetiti da se neki od uvjeta moraju ispuniti, dok su neka samo poželjna. To su tvrda
+Na prethodnim primjerima se može primijetiti da se neki od uvjeta moraju ispuniti, dok su neka samo poželjna. To su tvrda
 (engl. hard) i meka (engl. soft) ograničenja (engl. constraints). Tvrda ograničenja moraju biti ispunjena kako bi rješenje bilo
 prihvatljivo (npr. u primjeru 2 ne može konačno rješenje biti ono u kojem nastavnik istovremeno predaje u dva termina). S druge strane,
 meka ograničenja nisu obavezna, ali što su ona ispunjenija, to je rješenje bolje.
@@ -51,7 +51,7 @@ za rješavanje problema raspoređivanja su:
 1. Mađarski algoritam (http://www.math.harvard.edu/archive/20_spring_05/handouts/assignment_overheads.pdf)
 Algoritam je razvio i objavio Harold Kuhn 1955. godine, a nadjenuo mu je ime _mađarski_ jer se algoritam velikom mjerom oslanja
 na rad dvaju mađarskih matematičara Dénes Kőnig i Jenő Egerváry. ((mozda ovo staviti u fus notu))
-Algoritam je namijenjen raspoređivanju _n_ poslova na _n_ radnika pri ćemu jedan radnik može obavljati samo jedan posao. Dakako,
+Algoritam je namijenjen raspoređivanju _n_ poslova na _n_ radnika pri čemu jedan radnik može obavljati samo jedan posao. Dakako,
 problem bi se mogao preslikati na prethodno naveden primjer 1. ili na raspoređivanje studenata u kojem je svakom studentu pridružen
 različit termin. Vremenska složenost ovog algoritma je O(n3), a algoritam koristi sljedeći teorem:
 Ako svakom elementu bilo kojeg retka ili stupca matrice kazne dodamo ili oduzmemo neki broj, tada je optimalno raspoređivanje za rezultantnu
@@ -69,12 +69,12 @@ ga dodaj svakom prekrivenom stupcu. Vrati se na korak 3.
 
 (primjer https://www.geeksforgeeks.org/hungarian-algorithm-assignment-problem-set-1-introduction/)
 Pogledajmo to sada na primjeru raspoređivanja poslova utovara robe, transporta robe te istovara robe među radnicima Petrom, Ivanom i Markom.
-Neka je cijena pridjeljivanja poslova izmeđdu radnika određena sljedećom matricom:
+Neka je cijena pridjeljivanja poslova između radnika određena sljedećom matricom:
 25 40 35
 40 60 35
 20 40 25
 
-Korak 1.: oduzmimi najmanju vrijednost svakog retka.
+Korak 1.: oduzmi najmanju vrijednost svakog retka.
 0 15 10
 5 25 0
 0 20 5
@@ -89,9 +89,9 @@ Korak 3.: Prekrij sve nule minimalnim brojem linija.
 (prekrivaju se linije)
 
 
-Korak 4: s obzirom da je broj linija potrebnih za prekrivanje svih nula jednak 3 optimalno rješenje je pronađeno.
+Korak 4: s obzirom na to da je broj linija potrebnih za prekrivanje svih nula jednak 3 optimalno rješenje je pronađeno.
 
-Poslove treba raspodijeliti tako da Petar radi transport robe, Ivan istovar, a Marko utovar. Cijna takvog raspoređivanja je 95.
+Poslove treba raspodijeliti tako da Petar radi transport robe, Ivan istovar, a Marko utovar. Cijena takvog raspoređivanja je 95.
 
 
 
@@ -99,12 +99,12 @@ Poslove treba raspodijeliti tako da Petar radi transport robe, Ivan istovar, a M
 
 2. Algoritam kolonije mrava
 Ovaj algoritam je inspiriran procesom kojim mravi pronalaze najkraći put između mravinjaka i hrane. Mravi se prilikom potrage za hranom ne
-služe svojim osjetilom vida, nego osjetilom feromona. Fermoni su kemijiski tragovi koje mravi ostavljaju za sobom krečući se od
+služe svojim osjetilom vida, nego osjetilom feromona. Fermoni su kemijski tragovi koje mravi ostavljaju za sobom krećući se od
 mravinjaka do hrane i povratno. Intenzitet mirisa fermona slabi s vremenom ako tim putem ne prolaze mravi. Kako mravi na ovaj način pronalaze
 najkraći put između hrane i mravinjaka, intuitivno je jasno da je ovaj algoritam prikladan za pretraživanje grafova. Osim za pretraživanje grafova,
 algoritam kolonije mrava je uspješno primjenjivan na probleme izrade rasporeda (https://www.researchgate.net/publication/268047044_Evolucijsko_racunanje_i_problem_izrade_rasporeda)
 te je u velikoj mjeri sličan konstruktivnom optimizacijskom algoritmu koji je tema ovog rada (fus nota: detaljnija usporedba algoritama je dana u narednim poglavljima).
-Pseudo kod algoirtma je: (https://www.researchgate.net/publication/268047044_Evolucijsko_racunanje_i_problem_izrade_rasporeda)
+Pseudo kod algoritma je: (https://www.researchgate.net/publication/268047044_Evolucijsko_racunanje_i_problem_izrade_rasporeda)
 
 ponavljaj dok nije kraj
   ponovi za svakog mrava
@@ -113,17 +113,17 @@ ponavljaj dok nije kraj
   kraj ponovi
   ispari feromonske tragove
   ponovi za sve mrave
-      azuriraj feromonske tragove
+      ažuriraj feromonske tragove
   kraj ponovi
 kraj ponavljanja
 
 
 Rješenje za svakog mrava se gradi tako da se odabire brid po brid kojima će mrav prolaziti (parovi bridova naravno moraju imati jednu
-zajedničku točku, odnosno mora se moći nakon prvog brida preći na drugi brid itd.). Odabir kojim bridom će mrav poći iz trenutnog čvora
-se određuje slučajnim proporcioanlnim pravilom (engl. random proportional rule):
+zajedničku točku, odnosno mora se moći nakon prvog brida prijeći na drugi brid itd.). Odabir kojim bridom će mrav poći iz trenutnog čvora
+se određuje slučajnim proporcionalnim pravilom (engl. random proportional rule):
 formula: Pkij = tao na alfa * n na beta / suma (tao na afla * n na beta)
 
-pri čemu su alfa i beta konstante, tao je intenzitet fermona na bridu, a n je heuristička informacija koliko je povoljno krenuti bridom. Nik pretstavlja
+pri čemu su alfa i beta konstante, tao je intenzitet fermona na bridu, a n je heuristička informacija koliko je povoljno krenuti bridom. Nik predstavlja
 sve bridove kojima je početni čvor trenutni čvor u kojem se mrav nalazi. Prije prve iteracije, sve vrijednosti tao se postavljaju na
 vrijednost koja je nešto veća od očekivane vrijednosti koju će mravi ostavljati u svakoj iteraciji. Za izračun se koristi formula:
 tou0 = m / Cmn
@@ -140,26 +140,14 @@ pri čemu je delta tij na k:
 
 
 
+Ovdje su navedena samo dva primjera algoritama koji se mogu primijeniti na probleme raspoređivanja. Konstruktivni optimizacijski
+algoritam je detaljno opisan u narednim poglavljima, a postoji još mnoštvo drugih algoritama koji se mogu koristiti (Algoritam roja
+čestica, Algoritmi umjetnih imunoloških sustava, Genetski algoritmi itd.). Svaki od algoritama ima svoje prednosti i nedostatke te je
+prikladniji za određenu specijalizaciju problema, dok za drugu vrstu problema daje slabije rezultate. Ova tvrdnja je poznata kao
+_no-free-lunch_ teorem kojeg su Wolpert i Macready dokazali u svojim radovima, a u originalu glasi:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-algoritam koji ja koristim nije tu naveden nego je u nastavku detaljno razradnjen
+All algorithms that search for an extremum of a cost function perform exactly the same, according to any performance measure,
+when averaged over all possible cost functions. In particular, if algorithm A outperforms algorithm B on some cost functions, then
+loosely speaking there must exist exactly as many other functions where B outperforms A.
 
 http://java.zemris.fer.hr/nastava/ui/evo/evo-20160608.pdf / najbolji optimizacijski
