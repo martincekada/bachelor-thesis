@@ -101,23 +101,56 @@ public class Evaluator {
     }
 
     public static void main(String[] args) {
+        final double STOP_COFF = 0.999;
+
+
+        double[] smoothingParameters = { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
+
+        double[] bete = new double[10];
+
+        int j = 0;
+        for (double d : smoothingParameters) {
+            double product = 1;
+
+            for (int i = 1; i < 500; ++i) {
+                product *= (1 - Math.pow((1-d), i));
+            }
+
+//            System.out.println(product / (3 * Math.E));
+
+            bete[j++] = (product / (3 * Math.E)) * 0.9;
+//            System.out.println("b: " + bete[j-1]);
+        }
 
         List<LeadingOnesModel> models = new ArrayList<>();
 
-        int[] ls = new int[] {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+//        int[] ls = new int[] {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
-        for (int l : ls) {
-            int n = (int) Math.pow(l, 2.5);
-            int nb = (int) (Math.pow(l, 2.5) * 0.1);
-            models.add(new LeadingOnesModel(n, nb, l, 0.8, null, 0.9));
+        for (int i = 0; i < 10; ++i) {
+            int n = (int) Math.pow(50, 2.5);
+            int nb = (int) (Math.pow(50, 2.5) * bete[i]);
+            models.add(new LeadingOnesModel(n, nb, 50, smoothingParameters[i], null, STOP_COFF));
         }
 
-        for (int l : ls) {
-            int n = (int) Math.pow(l, 2.5) / 2;
-            int nb = (int) (Math.pow(l, 2.5) * 0.1) / 2;
-            models.add(new LeadingOnesModel(n, nb, l, 0.8, null, 0.9));
-        }
 
+
+
+//        List<LeadingOnesModel> models = new ArrayList<>();
+//
+//        int[] ls = new int[] {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+//
+//        for (int l : ls) {
+//            int n = (int) Math.pow(l, 2.5);
+//            int nb = (int) (Math.pow(l, 2.5) * 0.09);
+//            models.add(new LeadingOnesModel(n, nb, l, 0.8, null, STOP_COFF));
+//        }
+//
+//
+//
+//
+//
+//
+//
         Evaluator evaluator = new Evaluator(models, "/Users/infinum/Desktop/example.csv", 30);
         evaluator.generateStats();
     }
