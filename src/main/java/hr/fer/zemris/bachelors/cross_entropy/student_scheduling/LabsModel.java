@@ -46,7 +46,7 @@ public class LabsModel {
         this.overfillingCoff = overfillingCoff;
         this.queueFactor = queueFactor;
         this.queueSize = queueSize;
-        this.queue = new SolutionsQueue(queueSize, students.size(), labs.size());
+        this.queue = new SolutionsQueue(queueSize, students.size(), labs.size(), labs.get(0).getMaxStudents());
 
 
 
@@ -131,8 +131,10 @@ public class LabsModel {
             if (stopCondition()) return i;
 
             if (i % 50 == 0) {
+
                 queue.clear();
                 System.out.println("---cistim");
+
             }
         }
     }
@@ -156,46 +158,46 @@ public class LabsModel {
                 }
             }
         }
+//
+//        int[] sample = sample(1).get(0).getSequnce();
+//        int[] filled = new int[labs.size()];
+//
+//        for (int i = 0, n = students.size(); i < n; ++i) {
+//            filled[sample[i]]++;
+//        }
 
-        int[] sample = sample(1).get(0).getSequnce();
-        int[] filled = new int[labs.size()];
+        Map<Integer, Integer> overFilledLabs = queue.getOverfilled();
+        Integer sum = overFilledLabs.values().stream().mapToInt(Integer::intValue).sum();
 
-        for (int i = 0, n = students.size(); i < n; ++i) {
-            filled[sample[i]]++;
-        }
 
-        List<Integer> overFilledLabs = new ArrayList<>();
-        int[] overfilledCount = new int[labs.size()];
 
-        for (int i = 0, n = labs.size(); i < n; ++i) {
-            overfilledCount[i] = filled[i] - labs.get(i).getMaxStudents();
 
-            if (filled[i] - labs.get(i).getMaxStudents() > 0) {
-                overFilledLabs.add(i);
-            }
-        }
+        if (sum > 250) return;
 
-        if (overFilledLabs.size() > 5) return;
 
-        overFilledLabs.sort((s1, s2) -> Integer.compare(s1, s2));
-
-        System.out.println("overfillani su: " + Arrays.toString(overFilledLabs.toArray()));
+        System.out.println(sum);
+        System.out.println("overfillani su: " + overFilledLabs.keySet().toString());
 
         for (int j = 0, m = students.size(); j < m; ++j) {
             double redistribute = 0;
 
-            for (Integer overfiled : overFilledLabs) {
-//                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
+            for (Map.Entry<Integer, Integer> overfiled : overFilledLabs.entrySet()) {
 
-                redistribute += currentDistribution[overfiled][j] * (0.01); // * reduceCoff);
+                // TODO:
+                // preslikati omjer valua / sum na interval [0.01, 0.05]
 
-                currentDistribution[overfiled][j] *= (1 - (0.01)); // * reduceCoff));
+                double reduceCoff = ((double) overfiled.getValue()) / sum / 3;
+                System.out.println(reduceCoff);
+
+                redistribute += currentDistribution[overfiled.getKey()][j] * reduceCoff;
+
+                currentDistribution[overfiled.getKey()][j] *= (1 - reduceCoff);
             }
 
 
             double increment = redistribute / (labs.size() - overFilledLabs.size());
             for (int i = 0, n = labs.size(); i < n; ++i) {
-                if (overFilledLabs.contains(i)) continue;
+                if (overFilledLabs.containsKey(i)) continue;
 
                 currentDistribution[i][j] += increment;
             }
