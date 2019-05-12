@@ -129,6 +129,11 @@ public class LabsModel {
             heuristics();
 
             if (stopCondition()) return i;
+
+            if (i % 50 == 0) {
+                queue.clear();
+                System.out.println("---cistim");
+            }
         }
     }
 
@@ -172,28 +177,30 @@ public class LabsModel {
 
         if (overFilledLabs.size() > 5) return;
 
-        System.out.println("overfillanih je: " + overFilledLabs.size());
+        overFilledLabs.sort((s1, s2) -> Integer.compare(s1, s2));
 
-//        for (int j = 0, m = students.size(); j < m; ++j) {
-//            double redistribute = 0;
+        System.out.println("overfillani su: " + Arrays.toString(overFilledLabs.toArray()));
+
+        for (int j = 0, m = students.size(); j < m; ++j) {
+            double redistribute = 0;
+
+            for (Integer overfiled : overFilledLabs) {
+//                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
+
+                redistribute += currentDistribution[overfiled][j] * (0.01); // * reduceCoff);
+
+                currentDistribution[overfiled][j] *= (1 - (0.01)); // * reduceCoff));
+            }
+
+
+            double increment = redistribute / (labs.size() - overFilledLabs.size());
+            for (int i = 0, n = labs.size(); i < n; ++i) {
+                if (overFilledLabs.contains(i)) continue;
+
+                currentDistribution[i][j] += increment;
+            }
+        }
 //
-//            for (Integer overfiled : overFilledLabs) {
-////                int reduceCoff = overfilledCount[overfiled] > 5 ? 5 : overfilledCount[overfiled];
-//
-//                redistribute += currentDistribution[overfiled][j] * (0.05); // * reduceCoff);
-//
-//                currentDistribution[overfiled][j] *= (1 - (0.05)); // * reduceCoff));
-//            }
-//
-//
-//            double increment = redistribute / (labs.size() - overFilledLabs.size());
-//            for (int i = 0, n = labs.size(); i < n; ++i) {
-//                if (overFilledLabs.contains(i)) continue;
-//
-//                currentDistribution[i][j] += increment;
-//            }
-//        }
-////
 //        double[] control = new double[students.size()];
 //        for (int j = 0, m = students.size(); j < m; ++j) {
 //
@@ -210,13 +217,13 @@ public class LabsModel {
 
 
     private void update(double[][] newDistribution) {
-//        double[][] queueDistribution = queue.getDistribution();
+        double[][] queueDistribution = queue.getDistribution();
 
         for (int i = 0, n = labs.size(); i < n; ++i) {
             for (int j = 0, m = students.size(); j < m; ++j) {
                 currentDistribution[i][j] = (1.0 - smoothingParameter - queueFactor) * currentDistribution[i][j] +
-                                                                  smoothingParameter * newDistribution[i][j]; //     +
-//                                                                         queueFactor * queueDistribution[i][j];
+                                                                  smoothingParameter * newDistribution[i][j]     +
+                                                                         queueFactor * queueDistribution[i][j];
             }
         }
     }
@@ -239,7 +246,7 @@ public class LabsModel {
 
 
         for (int i = 0; i < queueSize; ++i) {
-//            queue.add(best.get(i));
+            queue.add(best.get(i));
         }
 
 
@@ -308,7 +315,7 @@ public class LabsModel {
 
         for (int i = 0, n = students.size(); i < n; ++i) {
             if (students.get(i).hasCollisionWith(labs.get(sample[i]))) {
-                cost += 70_000;
+                cost += 80_000;
             }
 
             if (students.get(i).increasesDayDuration(labs.get(sample[i]))) {
@@ -430,6 +437,8 @@ public class LabsModel {
             writer.println("Sample size: " + sampleSize);
             writer.println("Best: " + Nb);
 
+            writer.flush();
+
             return true;
         }
         return false;
@@ -489,8 +498,8 @@ public class LabsModel {
         List<Student> studs = parseStudents("./src/main/resources/primjeri/primjer6/zauzetost.csv");
 
         LabsModel model = new LabsModel(
-                300, 50, 0.6, null, studs, labs, 10_000,
-                1, 0.0
+                300, 50, 0.5, null, studs, labs, 10_000,
+                50, 0.2
         );
 
         model.run();

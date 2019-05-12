@@ -29,7 +29,7 @@ public class SolutionsQueue {
         if (updated) {
             recalculateDistribution();
             updated = false;
-            System.out.println(updateCounter);
+//            System.out.println(updateCounter);
             updateCounter = 0;
 
 
@@ -45,14 +45,14 @@ public class SolutionsQueue {
         if (solutions.size() < size) {
             solutions.add(candidate);
             updated = true;
-            updateCounter++;
+//            updateCounter++;
         } else {
             if (solutions.peek().getCost() > candidate.getCost()) {
 
                 solutions.poll();
                 solutions.add(candidate);
                 updated = true;
-                updateCounter++;
+//                updateCounter++;
 
             }
         }
@@ -84,5 +84,8 @@ public class SolutionsQueue {
     }
 
 
+    public void clear() {
+        solutions.clear();
+    }
 
 }
