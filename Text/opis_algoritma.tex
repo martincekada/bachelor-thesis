@@ -1,0 +1,78 @@
+Konstruktivni optimizacijski algoritmi su široko korišteni algoritmi za heurističku optimizaciju. Inačica konstruktivnog optimizacijskog algoritma
+koji je korišten u ovom radu se temelji na radu (link na paper).
+
+1. Opći matematički model algoritma
+Promatramo problem s konačnim skupom izvodljivih rješenja S i funkcijom kazne f : S → R. Neka je skup S* skup optimalnih rješenja te isključimo trivijalna rješenja,
+odnosno pretpostavim da |S| > 1 i da S∗ ≠ S. Neka se svako rješenje iz skupa S može zapisati kao konačan niz simbola s = (s1,...,sL) iz skupa abecede A : =
+{a1,..., aK}. L je fiksna duljina rješenja. Model je generaliziran funkcijom izvodljivosti Ci(y, a) koja dodjeljuje težinu svakom a ∈ A za svako moguće parcijalno
+rješenje y duljine i. Prema tome, ako je Ci(y, a) = 0, parcijalno rješenje y se ne može nastaviti tako da se na njega nadoda znak a. Što je vrijednost funkcije Ci(y, a) veća,
+toliko je poželjnije da se niz nastavi znakom _a_ pohlepno (engl. greedy) gledano. Pretpostavlja se da su vrijednosti funkcije normirane. Model gradi rješenja korak po korak
+dodavajući nove simbole na desni kraj niza sve dok rješenje nije potpuno. Formalnije rečeno, definiramo skup Ri izvodljivih parcijalnih rješenja rekurzivno kako slijedi:
+neka _dijamant_ pretstavlja prazan string. Pretpostavljamo da je dano:
+C0(_dijamant_, a) :A → [0, 1], Suma C0(_dijamant_, a) = 1 (za svaki a elemnt A)
+što pretstavlja poželjnost i izvodljivost znaka _a_ na prvom mjestu rješenja. Nadalje definiramo:
+R1 : = {a ∈ A | C0(, a) > 0}
+Kao skup izvodljivih rješenja duljine 1. Pretpostavimo da je definiran skup Ri za neki i  ∈ {0,..., L − 1} i da je dano:
+Ci(y, ·) :A → [0, 1], Suma-za-svaki-aEa(Ci(y, a) = 1) za svaki y ∈ Ri.
+Neka (y, a) označava konkateniranje simabola a ∈ A na desni kraj parcijalnog rješenja y. Definiramo:
+Ri+1 : = { (y, a) | y ∈ Ri, a ∈ A, Ci(y, a) > 0 }
+i neka je S := RL. Za svaki y ∈ Ri, i ∈ {0,..., L − 1}, neka je
+Ci(y) : = {a ∈ A | Ci(y, a) > 0}
+bude potpora Ci(y, ·). -- We use the abbreviation I : = {0,..., L − 1} in the sequel. --
+
+Ovakva generalizacija modela ne postavlja gotovo nikakva ograničenja na optimizacijski problem. Odnosno, odgovarajućim odabirom A, S i C(y, a) svaki se problem može
+prilagoditi na ovaj model, no efikasnost može varirati. Model je razumnije koristiti u slučajevima kada je |A| << |S|. Ovo dodatno potvrđuje
+teorem s kraja prethodnog poglavlja koji tvrdi da svaki algoritam ne daje jednako dobre rezultate na svakom problemu.
+
+
+2. Generalizirani algoritam
+U suštini, algoritam razvija distribuciju nad skupom S = RL svih izvodljivih rješenja dajući pritom veliku vjerojatnost optimalnim rješenjima iz skupa S*.
+Neka P(A) označeva skup svih vjerojatnosti nad skupom A. Tada je p ∈ P(A)^L, p = (p(1), . . . , p(L)) vjerojatnost nad skupom A^L koja opisuje odabiranje rješenja
+s = (s1,...,sL) ∈ A^L pri čemu je L simbola s1,...,sL odabrano neovisno. Pritom je p(i) = p(a;i)a∈A ∈ P(A) je distribucija vjerojatnosti za simbol na i-toj lokaciji.
+Ulazni podaci za algoritam su:
+1. Funkcija poželjnosti Ci(·, ·), i ∈ {0,..., L − 1}
+2. Niz koeficijenata izglađivanja (Qt)t≥1 uz Qt ∈ (0, 1);
+3. Veličinu uzorka N i veličinu poduzorka Nb
+4. Početnu distribuciju p0 ∈ P(A)^L
+
+Početak:
+Za t = 0, postavi p = p0. Iteriraj kroz korake t = 1, 2,... sve dok uvijet zaustavljanja nije zadovoljen.
+
+Uzorkovanje (engl. Sampling):
+Ako je trenutna distribucija p ∈ P(A)^L, tada je vjerojatnost uzrokovanje rješenje s = (s1,...,sL) ∈ S dana izrazom:
+Qp(s) : = Qp(s1; 1, )·Li=2 Qp(si;i, (s1,...,si−1))
+pri čemu je:
+Qp(a;i, y) : = p(a, i)Ci−1(y, a)a	∈A p(a, i)Ci−1(y, a
+vjerojatnost da se izvodljivi simbol a ∈ A nadoda na poziciju i izvodljivog parcijalnog rješenja y ∈ Ri - 1. Koristi se konvencija 0/0 = 0.
+Na ovakav način, algoritam uzorkuje N rješenja s(1),...,s(N) neovisno i podjednako distribuirano.
+
+
+Ocjenjivanje (engl. Evaluation):
+Neka su uzorci x : = (s(1),...,s(N)) poredani prema funkciji kazne f:
+f(s1) < f(s2) ...
+te neka je odabrano najboljih Nb uzoraka Nb : = {s(n1), s(n2),...,s(nNb)}. Nakon toga određujemo relativnu frekvenciju simbola a na poziciji i ∈ {1,..., L}
+u odabranom djelu uzorka
+w(a;i, x) : = 1/Nb s∈Nb 1{a}(si) (4)
+i prikupimo te frekvencije za svaki a ∈ A te kreiramo w(i, x) : = w(a;i, x) a∈A i
+w(x) : = w(1, x), . . . ,w(L, x).
+Tada je w(x) distribucija vjerojatnosti za P(A)^L koja daje relativne frekvencije sinbola iz boljeg dijela uzorka x uzorkovanog s vjerojatnosti Qp.
+
+
+
+Ažuriranje:
+Trenutnu distribuciju p ažuriramo kao kombinaciju p i relativne frekvencije w(x)
+p = (1 - Qt+1) * p + Qt+1 * w(x)
+U idućem koraku se brojač t uvećava za 1 i korak uzorkovanja se obavlja s novom ditribucijom p.
+
+
+
+
+
+
+2. Prilagodba modela -> ovo mozda prebaciti u poglavlje 4
+mapiranje opceg na nas konkretan problem
+
+
+
+
+usporedba s mravljim algoritmom
