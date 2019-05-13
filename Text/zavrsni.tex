@@ -1,8 +1,10 @@
 \documentclass[times, utf8, zavrsni]{fer}
 \usepackage{booktabs}
+\usepackage[unicode]{hyperref}
 
 \begin{document}
 
+%inkscape je besplatan i dobar za crtanje, generirati samo svg, ali samo sliku, a ne cijlu stranicu!!
 % TODO: Navedite broj rada.
 \thesisnumber{000}
 
@@ -24,6 +26,88 @@
 
 \chapter{Uvod}
 Uvod rada. Nakon uvoda dolaze poglavlja u kojima se obrađuje tema.
+
+\begin{table}[h!]
+\caption{Tablica ima caption iznad, a slika ispod!!}
+\label{tbl:kvadrati}
+  \centering
+  \begin{tabular}{r | c c c}
+  $x$ & 1 & 2 & 3 \\ \hline
+  $f(x) = x^2$ & 1 & 4 & 9
+  \end{tabular}
+  \end{table}
+
+asdfsadfasdjfklasjdf;
+sdfmlaskdf
+asdfasdfja;sdlfasldjf
+
+\begin{itemize}
+  \item prvi redak
+  \item sadkfasdlf
+  \item sdfsdkf
+  sdfasdf
+  asdfasdf
+  \item
+\end{itemize}
+
+\begin{enumerate}
+  \item prvi redak
+  \item sadkfasdlf
+  \item sdfsdkf
+  sdfasdf
+  asdfasdf
+  \item
+\end{enumerate}
+
+Kvadratna jednadzba jednoznacno je odredjena s tri koeficijenta: $a$, $b$ i $c$. I glasi: $a \cdot x^2_{i + 1} + b \cdots x_i + c$
+Ili na drugi nacin: \[
+  a \cdot x^2_{i + 1} + b \cdots x_i + c
+\]
+% sve ide s ref osim equationa, oni idu s eqref
+i ovo je nastavak istog paragrafa. A rjesenje je dano i izrazom \eqref{eq:kvadjed} tekst iza izraza
+A rjesenje jednadzbe glasi:
+\begin{equation}
+x_{1, 2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2}
+\label{eq:kvadjed}
+\end{equation}
+
+Tabilca kvadrata borjevva priakzana je u nastavku \ref{tbl:kvadrati}
+
+
+\begin{table}
+\caption{Tablica ima caption iznad, a slika ispod!!}
+\label{tbl:kvadrati2}
+\centering
+\begin{tabular}{r | c c c}
+$x$ & 1 & 2 & 3 \\ \hline
+$f(x) = x^2$ & 1 & 4 & 9
+\end{tabular}
+\end{table}
+
+
+Evo jedne super knjige \citep{ungar2002uvod}
+
+tekst prije slika
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\linewidth]{asdf.png}
+  \caption{asdfasdfasdf}
+  \label{fig:slika}
+\end{figure}
+
+
+voce koje jako volime je:
+\begin{itemize}
+  \item jabuke,
+  \item kruske i
+  \item sljive.
+\end{itemize}
+
+nesto je nalaseno \emph{ovaj je jos \emph{dodatno} naglaseno}
+
+
+google je (\url{http://google.com}) kul tranz
+
 
 \chapter{Zaključak}
 Zaključak.
