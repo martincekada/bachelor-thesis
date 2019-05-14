@@ -2,3 +2,8 @@ target/
 .DS_Store
 .idea/
 2019*
+Text/*
+
+
+!Text/*.pdf
+!Text/*.tex
