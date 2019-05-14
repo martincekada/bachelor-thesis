@@ -9,7 +9,8 @@
 \usepackage{algorithmic}
 \usepackage{listings}
 \usepackage{longtable}
-
+\usepackage{dsfont}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
 
 
 \begin{document}
@@ -222,23 +223,131 @@ $$
 Konstruktivni optimizacijski algoritmi su široko korišteni algoritmi za heurističku optimizaciju. Inačica konstruktivnog optimizacijskog algoritma koji je korišten u ovom radu se temelji na radu \citep{zijun2014asymptotic}.
 
 \section{Opći matematički model algoritma}
-Promatramo problem s konačnim skupom izvodljivih rješenja S i funkcijom kazne f : S → R. Neka je skup S* skup optimalnih rješenja te isključimo trivijalna rješenja,
-odnosno pretpostavim da |S| > 1 i da S∗ ≠ S. Neka se svako rješenje iz skupa S može zapisati kao konačan niz simbola s = (s1,...,sL) iz skupa abecede A : =
-{a1,..., aK}. L je fiksna duljina rješenja. Model je generaliziran funkcijom izvodljivosti Ci(y, a) koja dodjeljuje težinu svakom a ∈ A za svako moguće parcijalno
-rješenje y duljine i. Prema tome, ako je Ci(y, a) = 0, parcijalno rješenje y se ne može nastaviti tako da se na njega nadoda znak a. Što je vrijednost funkcije Ci(y, a) veća,
-toliko je poželjnije da se niz nastavi znakom _a_ pohlepno (engl. greedy) gledano. Pretpostavlja se da su vrijednosti funkcije normirane. Model gradi rješenja korak po korak
-dodavajući nove simbole na desni kraj niza sve dok rješenje nije potpuno. Formalnije rečeno, definiramo skup Ri izvodljivih parcijalnih rješenja rekurzivno kako slijedi:
-neka _dijamant_ pretstavlja prazan string. Pretpostavljamo da je dano:
-C0(_dijamant_, a) :A → [0, 1], Suma C0(_dijamant_, a) = 1 (za svaki a elemnt A)
-što pretstavlja poželjnost i izvodljivost znaka _a_ na prvom mjestu rješenja. Nadalje definiramo:
-R1 : = {a ∈ A | C0(, a) > 0}
-Kao skup izvodljivih rješenja duljine 1. Pretpostavimo da je definiran skup Ri za neki i  ∈ {0,..., L − 1} i da je dano:
-Ci(y, ·) :A → [0, 1], Suma-za-svaki-aEa(Ci(y, a) = 1) za svaki y ∈ Ri.
-Neka (y, a) označava konkateniranje simabola a ∈ A na desni kraj parcijalnog rješenja y. Definiramo:
-Ri+1 : = { (y, a) | y ∈ Ri, a ∈ A, Ci(y, a) > 0 }
-i neka je S := RL. Za svaki y ∈ Ri, i ∈ {0,..., L − 1}, neka je
-Ci(y) : = {a ∈ A | Ci(y, a) > 0}
-bude potpora Ci(y, ·). -- We use the abbreviation I : = {0,..., L − 1} in the sequel. --
+Promatramo problem s konačnim skupom izvodljivih rješenja $S$ i funkcijom kazne $f: S \rightarrow \mathbb{R}$. Neka je skup $S^*$ skup optimalnih rješenja te isključimo trivijalna rješenja,
+odnosno pretpostavim da $|S| > 1$ i da $S^* \neq S$. Neka se svako rješenje iz skupa $S$ može zapisati kao konačan niz simbola
+$s = (s_1,...,s_L)$ iz skupa abecede $\mathbb{A} := {a_1,..., a_K}$. $L$ je fiksna duljina rješenja. Model je generaliziran funkcijom izvodljivosti $C_i(y, a)$ koja dodjeljuje težinu svakom $a \in \mathbb{A}$ za svako moguće parcijalno
+rješenje $y$ duljine $i$. Prema tome, ako je $C_i(y, a) = 0$, parcijalno rješenje $y$ se ne može nastaviti tako da se na njega nadoda znak $a$. Što je vrijednost funkcije $C_i(y, a)$ veća, toliko je poželjnije da se niz nastavi znakom $a$ pohlepno (engl. \textit{greedy}) gledano. Pretpostavlja se da su vrijednosti funkcije normirane. Model gradi rješenja korak po korak dodavajući nove simbole na desni kraj niza sve dok rješenje nije potpuno. Formalnije rečeno, definiramo skup $R_i$ izvodljivih parcijalnih rješenja rekurzivno kako slijedi:
+neka $\Diamond$ pretstavlja prazan string. Pretpostavljamo da je dano:
+$$
+C_0(\Diamond, \cdot) :\mathbb{A} \rightarrow [0, 1],   \sum_{a \in \mathbb{A}} C_0(\Diamond, a) = 1
+$$
+što pretstavlja poželjnost i izvodljivost znaka $a$ na prvom mjestu rješenja. Nadalje definiramo:
+$$
+R_1 := \{ a \in \mathbb{A} | C_0(\Diamond, a) > 0 \}
+$$
+Kao skup izvodljivih rješenja duljine 1. Pretpostavimo da je definiran skup $R_i$ za neki $i \in {0,..., L - 1}$ i da je dano:
+$$
+C_i(y, \cdot) :\mathbb{A} \rightarrow [0, 1], \sum_{a \in \mathbb{A}} C_i(y, a) = 1, \text{za svaki} y \in R_i
+$$
+Neka $(y, a)$ označava konkateniranje simabola $a \in \mathbb{A}$ na desni kraj parcijalnog rješenja $y$. Definiramo:
+$$
+R_{i+1} := \{ (y, a) | y \in R_i, a \in \mathbb{A}, C_i(y, a) > 0 \}
+$$
+i neka je $S := R_L$. Za svaki $y \in R_i$, $i \in \{0,..., L-1\}$, neka je
+$$
+C_i(y) := \{ a \in \mathbb{A} | C_i(y, a) > 0 \}
+$$
+bude potpora $C_i(y, \cdot)$. % -- We use the abbreviation I : = {0,..., L − 1} in the sequel. --
+
+Ovakva generalizacija modela ne postavlja gotovo nikakva ograničenja na optimizacijski problem. Odnosno, odgovarajućim odabirom
+$A$, $S$ i $C(y, a)$ svaki se problem može prilagoditi na ovaj model, no efikasnost može varirati. Model je razumnije koristiti u slučajevima kada je $|A| \ll |S|$. Ovo dodatno potvrđuje teorem s kraja prethodnog poglavlja koji tvrdi da svaki algoritam ne daje jednako dobre rezultate na svakom problemu.
+
+
+
+\section{Generalizirani algoritam}
+U suštini, algoritam razvija distribuciju nad skupom $S=R_L$ svih izvodljivih rješenja dajući pritom veliku vjerojatnost optimalnim rješenjima iz skupa $S^*$.
+Neka $\mathbb{P}(\mathbb{A})$ označeva skup svih vjerojatnosti nad skupom $\mathbb{A}$. Tada je $p \in \mathbb{P}(\mathbb{A})^L, p = (p(1), . . . , p(L))$ vjerojatnost nad skupom $\mathbb{A}^L$ koja opisuje odabiranje rješenja
+$s = (s_1,...,s_L) \in \mathbb{A}^L$ pri čemu je $L$ simbola $s_1,...,s_L$ odabrano neovisno. Pritom je
+$p(i) = p(a;i)_{a \in \mathbb{A}} \in \mathbb{P}(\mathbb{A})$ je distribucija vjerojatnosti za simbol na $i$-toj lokaciji.
+Ulazni podaci za algoritam su:
+\begin{enumerate}
+  \item funkcija poželjnosti $C_i(\cdot, \cdot), i \in {0,..., L-1}$,
+  \item niz koeficijenata izglađivanja $(\varrho_t)_{t \geq 1}$ uz $\varrho_t \in (0, 1)$,
+  \item veličinu uzorka $N$ i veličinu poduzorka $N_b$ te
+  \item početnu distribuciju $p_0 in \mathbb{P}(\mathbb{A})^L$
+\end{enumerate}
+
+\subsection{Početak}
+Za $t = 0$, postavi $p = p_0$. Iteriraj kroz korake $t = 1, 2,...$ sve dok uvijet zaustavljanja nije zadovoljen.
+
+\subsection{Uzorkovanje (engl. \textit{sampling})}
+Ako je trenutna distribucija $p \in \mathbb{P}(\mathbb{A})^L$, tada je vjerojatnost uzrokovanje rješenje $s = (s1,...,sL) \in S$ dana izrazom:
+$$
+Q_p(s) := Q_p(s_1; 1, \Diamond) \cdot \prod^L_{i=2} Q_p(s_i;i, (s_1,...,s_{i-1}))
+$$
+pri čemu je:
+$$
+Q_p(a;i, y) := \frac{p(a, i)C_{i-1}(y, a)}{\sum_{a' \in \mathbb{A}} p(a', i)C_{i-1}(y, a') }
+$$
+vjerojatnost da se izvodljivi simbol $a \in \mathbb{A}$ nadoda na poziciju i izvodljivog parcijalnog rješenja $y \in R_{i-1}$. Koristi se konvencija $\frac{0}{0} = 0$.
+Na ovakav način, algoritam uzorkuje $N$ rješenja $s^{(1)},...,s^{(N)}$ neovisno i podjednako distribuirano.
+
+
+\subsection{Ocjenjivanje (engl. \textit{evaluation})}
+Neka su uzorci $x := (s^{(1)},...,s^{(N)})$ poredani prema funkciji kazne $f$:
+$$
+f(s^{n_1}) \leq f(s^{n_2}) \leq \cdots \leq f(s^{n_N})
+$$
+te neka je odabrano najboljih $N_b$ uzoraka $N_b := \{ s^{(n_1)}, s^{(n_2)},...,s^{(n_{N_b})} \}$. Nakon toga određujemo relativnu frekvenciju simbola $a$ na poziciji $i \in {1,..., L}$
+u odabranom djelu uzorka
+$$
+w(a; i, x) : = \frac{1}{N_b} \sum_{s \in N_b} \mathds{1}_{\{a\}}(s_i)
+$$
+i prikupimo te frekvencije za svaki $a \in \mathbb{A}$ te kreiramo $w(i, x) = w(a;i, x)_{a \in \mathbb{A}}$ i
+$$
+w(x) := (w(1, x),...,w(L, x)).
+$$
+Tada je $w(x)$ distribucija vjerojatnosti za $\mathbb{P}(\mathbb{A})^L$ koja daje relativne frekvencije simbola iz boljeg dijela uzorka $x$ uzorkovanog s vjerojatnosti $Q_p$.
+
+\subsection{Ažuriranje (engl. \textit{update})}
+Trenutnu distribuciju $p$ ažuriramo kao kombinaciju $p$ i relativne frekvencije $w(x)$
+$$
+p := (1 - \varrho_{t+1})p + \varrho_{t+1} w(x)
+$$
+U idućem koraku se brojač t uvećava za 1 i korak uzorkovanja se obavlja s novom ditribucijom p.
+
+
+\chapter{Problem vodećih jedinica}
+Kako bi se bolje prikazalo ponašanje konstruktivnog optimizacijskog algoritma, u nastavku je razmatrana primjena algoritma na
+problem vodeće jedinice (engl. \textit{LeadingOne}). Problem se sastoji od generiranja niza nula i jedinica s ciljem maksimiziranja broja početnih jedinica. Optimalno
+rješenje je ono u kojem se niz sastoji isključivo od jedinica. Prateći notaciju iz prethodnih poglavlja, problem se može formalizirati tako da
+je abeceda znakova $\mathbb{A} = \{0, 1\}$, skup svih rješenja $S = \{0, 1\}^L$ te funkcija kazne:
+$$
+f(s) := L - \sum^L_{l=1} \prod^l_{i=1} s_i, za s = (s_1,..., s_L)
+$$
+Minimiziranjem kazne, broj početnih uzastopnih jedinica se maksimizira.
+Definirajmo dodatno $\tau$ kao prvu iteraciju u kojoj se pronalazi optimalno rješenje:
+$$
+\tau := min{t \geq 0 | X_t \cap S^* \neq \emptyset}
+$$
+pri čemu je $X_t :=  \{ X^{(1)}_t,...,X^{(N)}_t \} $ skup svih rješenja uzorkovanih u iteraciji $t$.
+
+U poglavlju 3, teoremu 2 rada \citep{zijun2014asymptotic} se tvrdi da uz odabir konstantnog parametra izglađivanja $\varrho_t = \varrho$, veličine uzorka $N = L^{(2 + \epsilon)}$, a $\epsilon > 0$ i
+$Nb =  \floor{(\beta N)}$ za $0 < \beta < \frac{1}{3e} \prod^{\infty}_{m=1} (1 - (1 - \varrho)^m)$. Uz početnu distribuciju
+$\prod_0(1, i) \equiv \frac{1}{2}$, odnosno jednoliku distribuciju, za prethodno definirani
+problem vodeće jedinice vrijedi $\mathbb{P}(\tau < L) \rightarrow 1$ kada $L \rightarrow \infty$.
+
+Ovaj teorem je ekspermintalno provjeren sa sljedećim rezultatima:
+
+Tablica 1. Utjecaj duljine uzorka L na broj iteracija (eps = 0.5, $\beta$ = 0.09)
+
+Iz tablice 1. je vidljivo da je broj iteracija potrebnih da rješenje konvengira u 1 manje od L za svaku testiranu duljinu rješenja. Prema dobivenim rezultatima
+se naslućuje da bi daljnjim rastom broja L teorem i dalje bio zadovoljen.
+
+
+
+
+
+
+
+U svim navedenim testovima uvjet zaustavljanja je bio da vjerojatnost p da se na poziciji i uzorkuje jedinica bude veća od 0.999:
+p(1, i) > 0.999, za svaki  i element {0,..., L-1}
+
+
+
+
+za svaku vrijednost je vršeno 30 testova
+
 
 \chapter{Zaključak}
 Zaključak.
