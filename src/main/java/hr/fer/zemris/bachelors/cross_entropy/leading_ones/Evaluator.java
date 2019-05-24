@@ -1,7 +1,6 @@
-package hr.fer.zemris.bachelors.cross_entropy;
+package hr.fer.zemris.bachelors.cross_entropy.leading_ones;
 
 import com.opencsv.CSVWriter;
-import hr.fer.zemris.bachelors.cross_entropy.leading_ones.LeadingOnesModel;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -145,13 +144,13 @@ public class Evaluator {
 //            models.add(new LeadingOnesModel(n, nb, l, 0.8, null, STOP_COFF));
 //        }
 //
+
 //
 //
 //
 //
 //
-//
-        Evaluator evaluator = new Evaluator(models, "/Users/infinum/Desktop/example.csv", 30);
+        Evaluator evaluator = new Evaluator(models, "/Users/infinum/Desktop/example3.csv", 30);
         evaluator.generateStats();
     }
 }

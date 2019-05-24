@@ -1,11 +1,9 @@
 package hr.fer.zemris.bachelors.cross_entropy.student_scheduling;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
-import hr.fer.zemris.bachelors.cross_entropy.structures.SolutionsQueue;
-import hr.fer.zemris.bachelors.cross_entropy.structures.Util;
+import hr.fer.zemris.bachelors.cross_entropy.structures.*;
 import hr.fer.zemris.bachelors.cross_entropy.student_scheduling.Solution;
-import hr.fer.zemris.bachelors.cross_entropy.structures.Lab;
-import hr.fer.zemris.bachelors.cross_entropy.structures.Student;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,12 +50,6 @@ public class LabsModel {
 
         if (this.startDistribution == null) {
             initStartDistribution();
-//            this.startDistribution = new double[labs.size()][students.size()];
-//
-//
-//            for (int i = 0, n = labs.size(); i < n; ++i) {
-//                Arrays.fill(this.startDistribution[i], 1.0 / n);
-//            }
         }
 
 
@@ -81,7 +73,7 @@ public class LabsModel {
                 helpDistribution[i][j] = 10;
 
                 if (students.get(j).hasCollisionWith(labs.get(i))) {
-                    helpDistribution[i][j] -= 7;
+                    helpDistribution[i][j] -= 8;
                 }
 
                 if (students.get(j).increasesDayDuration(labs.get(i))) {
@@ -113,7 +105,7 @@ public class LabsModel {
 
     }
 
-    public int run() throws IOException {
+    public Result run() throws IOException {
         currentDistribution = new double[labs.size()][students.size()];
         for (int i = 0, n = labs.size(); i < n; ++i) {
             for (int j = 0, m = students.size(); j < m; ++j) {
@@ -128,12 +120,20 @@ public class LabsModel {
             update(newDistribution);
             heuristics();
 
-            if (stopCondition()) return i;
+//            if (stopCondition()) return i;
 
-            if (i % 50 == 0) {
+
+            if (i > 3000) {
+//                stopCondition();
+                return generateResult();
+            }
+
+
+            if ((i + 1) % 50 == 0) {
 
                 queue.clear();
-                System.out.println("---cistim");
+                queue.add(bestSolution);
+//                System.out.println("---cistim");
 
             }
         }
@@ -170,39 +170,38 @@ public class LabsModel {
         Integer sum = overFilledLabs.values().stream().mapToInt(Integer::intValue).sum();
 
 
+        if (sum > 300) return;
 
 
-        if (sum > 250) return;
+//        System.out.println(sum);
+//        System.out.println("overfillani su: " + overFilledLabs.keySet().toString());
+//        System.out.println("=========redistribuiram===========");
 
-
-        System.out.println(sum);
-        System.out.println("overfillani su: " + overFilledLabs.keySet().toString());
-
-        for (int j = 0, m = students.size(); j < m; ++j) {
-            double redistribute = 0;
-
-            for (Map.Entry<Integer, Integer> overfiled : overFilledLabs.entrySet()) {
-
-                // TODO:
-                // preslikati omjer valua / sum na interval [0.01, 0.05]
-
-                double reduceCoff = ((double) overfiled.getValue()) / sum / 3;
-                System.out.println(reduceCoff);
-
-                redistribute += currentDistribution[overfiled.getKey()][j] * reduceCoff;
-
-                currentDistribution[overfiled.getKey()][j] *= (1 - reduceCoff);
-            }
-
-
-            double increment = redistribute / (labs.size() - overFilledLabs.size());
-            for (int i = 0, n = labs.size(); i < n; ++i) {
-                if (overFilledLabs.containsKey(i)) continue;
-
-                currentDistribution[i][j] += increment;
-            }
-        }
+//        double UPPER_BOUND = 0.05;
+//        double LOWWER_BOUND = 0.01;
+//        int maxi = overFilledLabs.values().stream().mapToInt(Integer::intValue).max().getAsInt();
 //
+//        for (int j = 0, m = students.size(); j < m; ++j) {
+//            double redistribute = 0;
+//
+//            for (Map.Entry<Integer, Integer> overfiled : overFilledLabs.entrySet()) {
+//
+//                double reduceCoff = (((double) overfiled.getValue()) / maxi) * (UPPER_BOUND - LOWWER_BOUND) + LOWWER_BOUND;
+//
+//                redistribute += currentDistribution[overfiled.getKey()][j] * reduceCoff;
+//
+//                currentDistribution[overfiled.getKey()][j] *= (1 - reduceCoff);
+//            }
+//
+//
+//            double increment = redistribute / (labs.size() - overFilledLabs.size());
+//            for (int i = 0, n = labs.size(); i < n; ++i) {
+//                if (overFilledLabs.containsKey(i)) continue;
+//
+//                currentDistribution[i][j] += increment;
+//            }
+//        }
+////
 //        double[] control = new double[students.size()];
 //        for (int j = 0, m = students.size(); j < m; ++j) {
 //
@@ -243,7 +242,7 @@ public class LabsModel {
             bestSolution = best.get(0);
         }
 
-        System.out.println(bestSolution.getCost());
+//        System.out.println(bestSolution.getCost());
 //        System.out.println(best.get(0).getCost());
 
 
@@ -300,12 +299,8 @@ public class LabsModel {
                 }
 
             }
-
-
             solutions.add(new Solution(sample, costFunction(sample)));
         }
-
-
         return solutions;
     }
 
@@ -334,31 +329,13 @@ public class LabsModel {
 
         for (int i = 0, n = labs.size(); i < n; ++i) {
             if (filled[i] > labs.get(i).getMaxStudents()) {
-
-                // ovdje ne uzimati linearno, nego kvadratno + koeficijine
-//                1000 + koff * delta^2 (koff moze komotno biti velik broj, 100/1000)
                 cost += (5000 + overfillingCoff * Math.pow((filled[i] - labs.get(i).getMaxStudents()), 2));
             }
 
             if (filled[i] < labs.get(i).getMinStudents()) {
-//                System.out.println("Manje od min");
-
-                // ovdje ne uzimati linearno, nego kvadratno + koeficijine
-//                1000 + koff * delta^2 (koff moze komotno biti velik broj, 100/1000)
-
                 cost += (5000 + overfillingCoff * Math.pow((labs.get(i).getMinStudents() - filled[i]), 2));
             }
-
-//            if (filled[i] < labs.get(i).getMaxStudents() * 0.8) {
-//                cost += 5;
-//            }
-
-//            if (filled[i] == labs.get(i).getMaxStudents()) {
-//                cost -= 100;
-//            }
-
         }
-
         return cost;
     }
 
@@ -380,7 +357,7 @@ public class LabsModel {
     }
 
     private boolean stopCondition() throws IOException {
-        if (stopFile.exists()) {
+//        if (stopFile.exists()) {
             stopFile.delete();
             int colissionCounter = 0;
             int[] solution = bestSolution.getSequnce();
@@ -442,10 +419,42 @@ public class LabsModel {
             writer.flush();
 
             return true;
-        }
-        return false;
+//        }
+//        return false;
     }
 
+
+    private Result generateResult() {
+
+        int colissionCounter = 0;
+        int[] solution = bestSolution.getSequnce();
+
+        for (int i = 0, n = students.size(); i < n; ++i) {
+
+            students.get(i).setLab(labs.get(solution[i]));
+
+            if (students.get(i).hasCollision()) {
+                colissionCounter++;
+            }
+        }
+
+
+        int[] filled = new int[labs.size()];
+
+        for (int i = 0, n = students.size(); i < n; ++i) {
+            filled[solution[i]]++;
+        }
+
+        int overfilled = 0;
+        for (int i = 0, n = labs.size(); i < n; ++i) {
+            if (labs.get(i).getMaxStudents() < filled[i]) {
+                overfilled++;
+            }
+        }
+
+
+        return new Result(sampleSize, Nb, smoothingParameter, queueSize, queueFactor, overfilled, colissionCounter, bestSolution.getCost(), overfillingCoff);
+    }
 
 
 //    BILJESKE S SASTANKA
@@ -501,10 +510,17 @@ public class LabsModel {
 
         LabsModel model = new LabsModel(
                 300, 50, 0.5, null, studs, labs, 10_000,
-                50, 0.2
+                50, 0.3
         );
 
+        StopWatch timer = new StopWatch();
+
+        timer.start();
         model.run();
+        timer.stop();
+
+//        System.out.println("Broj iteracija: " + i);
+        System.out.println("Vrijeme: " + timer.getTime());
 //
 //        SolutionsQueue q = new SolutionsQueue(5, 5, 5);
 //
