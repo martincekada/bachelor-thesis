@@ -10,6 +10,40 @@
 \usepackage{listings}
 \usepackage{longtable}
 \usepackage{dsfont}
+
+
+\usepackage[T1]{fontenc}
+\usepackage{inconsolata}
+
+\usepackage{color}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+
+\usepackage[newfloat]{minted}
+\usepackage{listings}
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$$$$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+\makeatletter
+\AtBeginDocument{\let\c@listing\c@lstlisting}
+\makeatother
+
+
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 
 
@@ -57,12 +91,12 @@ Zadana je funkcija $g(x, y, z)$ nad domenom $[-300, 500] \times [-300, 500] \tim
 \textbf{Primjer 2.} Satničaru su na raspolaganju popis kolegija koji se predaju, popis studenata i njihov izbor kolegija, popis slobodnih dvorana i termina,
 željeni tjedni broj predavanja za svaki od kolegija te popis nastavnika koji predaju određene kolegije. Satničar treba zadovoljiti
 sljedeće uvjete:
-  \begin{itemize}
-    \item svi studenti imaju zakazana sva predavanja i mogu ih slušati bez kolizija,
-    \item niti jedan nastavnik ne drži više predavanja istovremeno,
-    \item niti ujednu dvoranu ne smije biti smješteno više studenata nego što je kapacitet dvorane te
-    \item niti ujednu prostoriju ne smiju biti smještena dva predavanja istovremeno.
-  \end{itemize}
+\begin{itemize}
+  \item svi studenti imaju zakazana sva predavanja i mogu ih slušati bez kolizija,
+  \item niti jedan nastavnik ne drži više predavanja istovremeno,
+  \item niti ujednu dvoranu ne smije biti smješteno više studenata nego što je kapacitet dvorane te
+  \item niti ujednu prostoriju ne smiju biti smještena dva predavanja istovremeno.
+\end{itemize}
 Također, bilo bi poželjno kada bi satničar osigurao da:
 \begin{itemize}
   \item student u danu ima barem dva predavanja ili niti jedno,
@@ -107,7 +141,7 @@ Algoritam je razvio i objavio Harold Kuhn 1955. godine, a nadjenuo mu je ime \te
 na rad dvaju mađarskih matematičara Dénes Kőnig i Jenő Egerváry.
 Algoritam je namijenjen raspoređivanju $n$ poslova na $n$ radnika pri čemu jedan radnik može obavljati samo jedan posao. Dakako,
 problem bi se mogao preslikati na prethodno naveden primjer 1. ili na raspoređivanje studenata u kojem je svakom studentu pridružen
-različit termin.
+različit termin (ovo je češći slučaj kada se radi raspored za usmene ispite).
 
 Vremenska složenost ovog algoritma je $\mathcal{O}(n^3$), a algoritam koristi sljedeći teorem:
 \emph{Ako svakom elementu bilo kojeg retka ili stupca matrice kazne dodamo ili oduzmemo neki broj, tada je optimalno raspoređivanje za rezultantnu matricu također optimalno i za prvotnu matricu.} Pritom se matricom kazne smatra matrica čiji redci predstavljaju radnike, stupci predstavljaju poslove, a vrijednost matrice na mjestu $C(i, j)$ predstavlja cijenu dodjeljivanja radniku $i$ posao $j$.
@@ -124,7 +158,20 @@ Koraci algoritma slijede.
 
 
 Pogledajmo to sada na primjeru raspoređivanja poslova utovara robe, transporta robe te istovara robe među radnicima Petrom, Ivanom i Markom.
-Neka je cijena pridjeljivanja poslova između radnika određena sljedećom matricom:
+Neka je cijena pridjeljivanja poslova između radnika određena sljedećom tablicom:
+\begin{table}[h!]
+  \caption{Tablica rasporeda poslova}
+  \label{tbl:poslovi}
+  \centering
+  \begin{tabular}{c | c | c | c}
+          & Utovar & Transport & Istovar \\ \hline
+    Petar & 25     & 40        & 35      \\ \hline
+    Ivan  & 40     & 60        & 35      \\ \hline
+    Marko & 20     & 40        & 25
+  \end{tabular}
+\end{table}
+
+\noindent Da bi izvođenje algoritma započelo, potrebno je prvo \ref{tbl:poslovi} zapisati matrično:
 $$
 \begin{bmatrix}
   \centering
@@ -133,6 +180,8 @@ $$
   20 & 40 & 25
 \end{bmatrix}.
 $$
+Potom može započeti izvršavanje algoritma.
+
 \begin{enumerate}
   \item Oduzmi najmanju vrijednost svakog retka.
   $$
@@ -147,14 +196,15 @@ $$
   \[
     \begin{pspicture}
     \begin{bmatrix}
-      \rnode{A}{0} & 0  & \rnode{B}{10} \\
-      \rnode{C}{5} & 25 & \rnode{D}{0}  \\
+      \rnode{A}{0} & 0 & \rnode{B}{10} \\
+      \rnode{C}{5} & 25 & \rnode{D}{0} \\
       \rnode{E}{0} & 20 & 5
     \end{bmatrix}
 
     \psset{nodesep=-1.5ex, linewidth=0.4pt}
-    \ncline{A}{B}\ncline[nodesep=-2ex]{C}{D}
-    \ncline[nodesep=-2ex]{A}{E}
+    \ncline{A}{B}
+    \ncline{C}{D}
+    \ncline{A}{E}
     \end{pspicture}
     \]
   \item S obzirom na to da je broj linija potrebnih za prekrivanje svih nula jednak $3$ optimalno rješenje je pronađeno.
@@ -167,7 +217,8 @@ služe svojim osjetilom vida, nego osjetilom feromona. Fermoni su kemijski trago
 mravinjaka do hrane i povratno. Intenzitet mirisa fermona slabi s vremenom ako tim putem ne prolaze mravi. Kako mravi na ovaj način pronalaze
 najkraći put između hrane i mravinjaka, intuitivno je jasno da je ovaj algoritam prikladan za pretraživanje grafova. Osim za pretraživanje grafova, algoritam kolonije mrava je uspješno primjenjivan na probleme izrade rasporeda
 \footnote{Na primjer \url{https://www.researchgate.net/publication/268047044_Evolucijsko_racunanje_i_problem_izrade_rasporeda}}
-te je u velikoj mjeri sličan konstruktivnom optimizacijskom algoritmu koji je tema ovog rada (fus nota: detaljnija usporedba algoritama je dana u narednim poglavljima).
+te je u velikoj mjeri sličan konstruktivnom optimizacijskom algoritmu koji je tema ovog rada
+\footnote{detaljnija usporedba algoritama je dana u narednim poglavljima}.
 Pseudo kod algoritma je:
 \footnote{ Preuzeto s \url{https://www.researchgate.net/publication/268047044_Evolucijsko_racunanje_i_problem_izrade_rasporeda}}
 
@@ -195,11 +246,13 @@ se određuje slučajnim proporcionalnim pravilom (engl. \textit{random proportio
   \end{cases}
 \]
 
-pri čemu su $\alpha$ i $\beta$ konstante, $\tau$ je intenzitet fermona na bridu, a $\eta$ je heuristička informacija koliko je povoljno krenuti bridom. $N^i_k$ predstavlja sve bridove kojima je početni čvor trenutni čvor u kojem se mrav nalazi. Prije prve iteracije, sve vrijednosti tao se postavljaju na vrijednost koja je nešto veća od očekivane vrijednosti koju će mravi ostavljati u svakoj iteraciji. Za izračun se koristi formula:
+pri čemu su $\alpha$ i $\beta$ konstante, $\tau$ je intenzitet fermona na bridu, a $\eta$ je heuristička informacija koliko je povoljno krenuti
+ bridom. $N^i_k$ predstavlja sve bridove kojima je početni čvor trenutni čvor u kojem se mrav nalazi. Prije prve iteracije,
+ sve vrijednosti $\tau$ se postavljaju na vrijednost koja je nešto veća od očekivane vrijednosti koju će mravi ostavljati u svakoj iteraciji. Za izračun se koristi formula:
 $$
-\tau_0 = \frac{m}{C^{mn}}
+\tau_0 = \frac{m}{C^{nn}}
 $$
-pri čemu je $m$ broj mrava, a $C^{mn}$ je procjena najkraćeg puta dobivena nekim jednostavnijim algoritmom.
+pri čemu je $m$ broj mrava, a $C^{nn}$ je procjena najkraćeg puta dobivena nekim jednostavnijim algoritmom.
 
 Isparavanje fermonskih tragova se vrši tako da se trenutna vrijednost pomnoži s konstantnim koeficijentom prema izrazu:
 $$
@@ -220,6 +273,7 @@ $$
 $$
 
 \chapter{Opis algoritma}
+\label{chap:opis_algoritma}
 Konstruktivni optimizacijski algoritmi su široko korišteni algoritmi za heurističku optimizaciju. Inačica konstruktivnog optimizacijskog algoritma koji je korišten u ovom radu se temelji na radu \citep{zijun2014asymptotic}.
 
 \section{Opći matematički model algoritma}
@@ -264,14 +318,14 @@ Ulazni podaci za algoritam su:
   \item funkcija poželjnosti $C_i(\cdot, \cdot), i \in {0,..., L-1}$,
   \item niz koeficijenata izglađivanja $(\varrho_t)_{t \geq 1}$ uz $\varrho_t \in (0, 1)$,
   \item veličinu uzorka $N$ i veličinu poduzorka $N_b$ te
-  \item početnu distribuciju $p_0 in \mathbb{P}(\mathbb{A})^L$
+  \item početnu distribuciju $p_0 \in \mathbb{P}(\mathbb{A})^L$
 \end{enumerate}
 
 \subsection{Početak}
-Za $t = 0$, postavi $p = p_0$. Iteriraj kroz korake $t = 1, 2,...$ sve dok uvijet zaustavljanja nije zadovoljen.
+Za $t = 0$, postavi $p = p_0$. Iteriraj kroz korake $t = 1, 2,...$ sve dok uvjet zaustavljanja nije zadovoljen.
 
 \subsection{Uzorkovanje (engl. \textit{sampling})}
-Ako je trenutna distribucija $p \in \mathbb{P}(\mathbb{A})^L$, tada je vjerojatnost uzrokovanje rješenje $s = (s1,...,sL) \in S$ dana izrazom:
+Ako je trenutna distribucija $p \in \mathbb{P}(\mathbb{A})^L$, tada je vjerojatnost uzrokovanja rješenje $s = (s1,...,sL) \in S$ dana izrazom:
 $$
 Q_p(s) := Q_p(s_1; 1, \Diamond) \cdot \prod^L_{i=2} Q_p(s_i;i, (s_1,...,s_{i-1}))
 $$
@@ -279,7 +333,7 @@ pri čemu je:
 $$
 Q_p(a;i, y) := \frac{p(a, i)C_{i-1}(y, a)}{\sum_{a' \in \mathbb{A}} p(a', i)C_{i-1}(y, a') }
 $$
-vjerojatnost da se izvodljivi simbol $a \in \mathbb{A}$ nadoda na poziciju i izvodljivog parcijalnog rješenja $y \in R_{i-1}$. Koristi se konvencija $\frac{0}{0} = 0$.
+vjerojatnost da se izvodljivi simbol $a \in \mathbb{A}$ nadoda na poziciju $i$ izvodljivog parcijalnog rješenja $y \in R_{i-1}$. Koristi se konvencija $\frac{0}{0} = 0$.
 Na ovakav način, algoritam uzorkuje $N$ rješenja $s^{(1)},...,s^{(N)}$ neovisno i podjednako distribuirano.
 
 
@@ -304,7 +358,7 @@ Trenutnu distribuciju $p$ ažuriramo kao kombinaciju $p$ i relativne frekvencije
 $$
 p := (1 - \varrho_{t+1})p + \varrho_{t+1} w(x)
 $$
-U idućem koraku se brojač t uvećava za 1 i korak uzorkovanja se obavlja s novom ditribucijom p.
+U idućem koraku se brojač $t$ uvećava za 1 i korak uzorkovanja se obavlja s novom ditribucijom $p$.
 
 
 \chapter{Problem vodećih jedinica}
@@ -313,40 +367,395 @@ problem vodeće jedinice (engl. \textit{LeadingOne}). Problem se sastoji od gene
 rješenje je ono u kojem se niz sastoji isključivo od jedinica. Prateći notaciju iz prethodnih poglavlja, problem se može formalizirati tako da
 je abeceda znakova $\mathbb{A} = \{0, 1\}$, skup svih rješenja $S = \{0, 1\}^L$ te funkcija kazne:
 $$
-f(s) := L - \sum^L_{l=1} \prod^l_{i=1} s_i, za s = (s_1,..., s_L)
+f(s) := L - \sum^L_{l=1} \prod^l_{i=1} s_i, \text{za }  s=(s_1,..., s_L)
 $$
 Minimiziranjem kazne, broj početnih uzastopnih jedinica se maksimizira.
 Definirajmo dodatno $\tau$ kao prvu iteraciju u kojoj se pronalazi optimalno rješenje:
 $$
-\tau := min{t \geq 0 | X_t \cap S^* \neq \emptyset}
+\tau := min \{ t \geq 0 | X_t \cap S^* \neq \emptyset \}
 $$
 pri čemu je $X_t :=  \{ X^{(1)}_t,...,X^{(N)}_t \} $ skup svih rješenja uzorkovanih u iteraciji $t$.
 
-U poglavlju 3, teoremu 2 rada \citep{zijun2014asymptotic} se tvrdi da uz odabir konstantnog parametra izglađivanja $\varrho_t = \varrho$, veličine uzorka $N = L^{(2 + \epsilon)}$, a $\epsilon > 0$ i
+U poglavlju 3, teoremu 2 rada \citep{zijun2014asymptotic} se tvrdi da uz odabir konstantnog parametra izglađivanja $\varrho_t = \varrho$, veličine uzorka $N = L^{(2 + \epsilon)}$, uz $\epsilon > 0$ i
 $Nb =  \floor{(\beta N)}$ za $0 < \beta < \frac{1}{3e} \prod^{\infty}_{m=1} (1 - (1 - \varrho)^m)$. Uz početnu distribuciju
 $\prod_0(1, i) \equiv \frac{1}{2}$, odnosno jednoliku distribuciju, za prethodno definirani
 problem vodeće jedinice vrijedi $\mathbb{P}(\tau < L) \rightarrow 1$ kada $L \rightarrow \infty$.
 
-Ovaj teorem je ekspermintalno provjeren sa sljedećim rezultatima:
+Ovaj teorem je ekspermintalno vrednovan, a rezultati su u tablici \ref{tbl:promjenaL}. Vidljivo je da broj iteracija potrebnih da rješenje
+konvengira u 1 manje od $L$ za svaku testiranu duljinu rješenja. Prema dobivenim rezultatima se naslućuje da bi daljnjim rastom duljine $L$
+teorem i dalje bio zadovoljen.
+\begin{table}[h!]
+  \caption{Utjecaj duljine uzorka $L$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
+  \label{tbl:promjenaL}
+  \centering
+  \begin{tabular}{c | c | c | c | c}
+    $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
+    10 & 316 & 28 & 0.8 & 6 \\ \hline
+    20 & 1788 & 160 & 0.8 & 9 \\ \hline
+    30 & 4929 & 443 & 0.8 & 13 \\ \hline
+    40 & 10119 & 910 & 0.8 & 16 \\ \hline
+    50 & 17677 & 1590 & 0.8 & 20 \\ \hline
+    60 & 27885 & 2509 & 0.8 & 23 \\ \hline
+    70 & 40996 & 3689 & 0.8 & 26 \\ \hline
+    80 & 57243 & 5151 & 0.8 & 30 \\ \hline
+    90 & 76843 & 6915 & 0.8 & 33 \\ \hline
+    100 & 100000 & 9000 & 0.8 & 37
+  \end{tabular}
+\end{table}
 
-Tablica 1. Utjecaj duljine uzorka L na broj iteracija (eps = 0.5, $\beta$ = 0.09)
-
-Iz tablice 1. je vidljivo da je broj iteracija potrebnih da rješenje konvengira u 1 manje od L za svaku testiranu duljinu rješenja. Prema dobivenim rezultatima
-se naslućuje da bi daljnjim rastom broja L teorem i dalje bio zadovoljen.
 
 
+Utjecaj parametra izglađivanja prikazan je u tablici \ref{tbl:promjenaQ}. Iz mjerenja je vidljivo da opisani problem povećanjem parametra izglađivanja
+brže konvengira željenom rješenju. Najbolji rezultat je dobiven uz $\varrho_t = \varrho = 1$ što predstavlja slučaj u kojem trenutnu distribuciju
+$p$ zamijenjujemo relativnom frekvencijom uzorkovanja, odnosno $p := w(x)$.
+
+\begin{table}[h!]
+  \caption{Utjecaj parametra izglađivanja $\varrho_t$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
+  \label{tbl:promjenaQ}
+  \centering
+  \begin{tabular}{c | c | c | c | c}
+    $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
+    50 & 17677 & 6 & 0.2 & 43 \\ \hline
+    50 & 17677 & 82 & 0.3 & 33 \\ \hline
+    50 & 17677 & 279 & 0.4 & 29 \\ \hline
+    50 & 17677 & 563 & 0.5 & 25 \\ \hline
+    50 & 17677 & 881 & 0.6 & 23 \\ \hline
+    50 & 17677 & 1195 & 0.7 & 21 \\ \hline
+    50 & 17677 & 1483 & 0.8 & 19 \\ \hline
+    50 & 17677 & 1736 & 0.9 & 18 \\ \hline
+    50 & 17677 & 1950 & 1.0 & 15
+  \end{tabular}
+\end{table}
+
+Za svaki testirani skup parametara vršeno je $30$ testova, a u tablicama je naveden medijan dobivenih vrijednosti.
+U svim navedenim testovima uvjet zaustavljanja je bio da vjerojatnost $p$ da se na poziciji $i$ uzorkuje $1$ bude veća od $0.999$:
+$$
+p(1, i) > 0.999, \text{za svaki }  i \in \{ 0,..., L-1 \} .
+$$
+
+\chapter{Problem izrade rasporeda laboratorijskih vježbi}
+Izrada rasporeda laboratorijskih vježbi je specijalizacija problema raspoređivanja. Cilj je svakom studentu pridružiti termin laboratorijskih
+vježbi s kojim on nema kolizije, a da pritom niti jedan termin ne bude niti prepunjen niti podpunjen. Glavna razlika izrade rasporeda laboratorijskih
+vježbi u odnosnu na izradu rasporeda ispita je ta što laboratorijsku vježbu treba smjestiti u postojeći raspored studenata, dok se prilikom
+izrade rasporeda ispita pretpostavlja da za vrijeme ispita studenti nemaju predavanja. Također, raspoređivanje za laboratorijske vježbe se
+vrši za svaki predmet neovisno, dok se prilikom izrade rasporeda ispita uzimaju svi ispiti studenta u obzir. Dodatno, prilikom izrade rasporeda
+laboratorijskih vježbi termini u kojima se laboratorijske vježbe mogu održati su unaprijed određene, dok se prilikom izrade rasporeda ispita
+trebaju odrediti i termini.
+Tvrda ograničenja izrade rasporeda laboratorijskih vježbi su:
+\begin{itemize}
+  \item svakom studentu treba dodijeliti termin laboratorijske vježbe,
+  \item student ne smije imati koliziju s dodijeljenim terminom laboratorijske vježbe,
+  \item u termin ne smije biti smješteno više od maksimalnog broja studenata za termin te
+  \item u termin ne smije biti smješteno manje od minimalnog broja studenata za termin.
+\end{itemize}
+Nakon što su navedena tvrda ograničenja zadovoljena, raspoređivanje se dodatno vrednuje mekim ograničenjima. Meka ograničenja dodatno kažnjavaju
+rasporede u kojima:
+\begin{itemize}
+  \item je termin pridjeljen studentu na dan na koji nema predavanja i
+  \item termin produžuje ukupno vrijeme studenta na fakultetu (laboratorijska vježba nije u rupi između drugih predavanja).
+\end{itemize}
+
+\section{Formalna defincija problema}
+Konkretan problem raspoređivanja obrađen u ovom radu se odnosi na izradu rasporeda za laboratorijske vježbe iz predmeta Digitalna logika
+i Objektno orijentirano programiranje. Prema notaciji iz \ref{chap:opis_algoritma}, skup abecede $\mathbb{A}$ je skup $Termini$ svih termina laboratorijskih
+vježbi. Duljina uzorka $L$ je broj studenata u skupu $Studenti$ koje treba rasporediti. U distribuciji $p$, vrijednost na mjestu $p_{ij}$ predstavlja
+vjerojatnost da studentu $j$ bude pridjeljen termin $i$. Rješenje problema je niz $s=(s_1,...,s_L)$ pri čemu je $s_1$ termin laboratorijske
+vježbe za prvog studenta itd. Nad svakim studentom iz skupa $Studenti$ je definirana metoda $imaKolizijuS(Termin) =
+\{\top, \bot \}$ koja vraća $\top$ ako student ima koliziju s predanim terminom, odnosno $\bot$ kada student nema koliziju
+s predanim terminom. Metoda $produljujeTrajanjeDana(Termin) = \{\top, \bot \}$ definirana nad elementima skupa $Studenti$
+vraća $\top$ ako bi pridjeljivanje termina studentu produžilo trajanje dana na fakultetu, a $\bot$ ako ne bi. Odnosno,
+ova metoda vraća $\top$ kada predani termin nije u rupi između drugih predavanja studentu, a $\bot$ kada je.
+$naSlobodanDan(Termin) = \{\top, \bot \}$ je metoda definirana nad elementima skupa $Studenti$ koja vraća $\top$ ako je
+predani termin studentu u danu u kojem nema niti jedno predavanje, a $\bot$ ako student na dan termina ima predavanja.
+
+\section{Inicijalna distribucija}
+U problemu vodećih jedinica inicijalna distribucija je uniforma kako bi se demonstrirao rad algoritma. U stvarnom problemu kao što je problem izrade rasporeda
+uniformna početna distribucija može uvelike odužiti vrijeme potrebno da algoritam konvergira prema rješenju. Zato je korisno inicijalizirati početnu distribuciju u skladu s
+domenom problema kako bi se algoritam usmjerio prema rješenju. Kod problema raspoređivanja termina laboratorijskih vježbi studentima, u samom početku (prije početka rada
+algoritma) moguće je predvidjeti da će određena pridruživanja termina studentima biti nepovoljnija od drugih. U konačnom rješenju nije dopušteno da student ima koliziju
+s pridruženim terminom, stoga je jasno da u inicijalnoj distribuciji treba studentu pridružiti malu vjerojatnost da mu se pridruži termin s kojim ima koliziju. Također,
+poznato je da ako termin produljuje trajanje dana studentu ili je na studentov slobodan dan, da će to rješenje biti nepovoljnije od onih koja ne produljuju trajanje dana
+studentu. Pseudokod inicijalizacije početne distribucije koja je u skladu s prethodnim opažanjima prikazan je na \ref{algo:inicijalna_distribucija}. Pridruživanje vjerojatnosti se
+vrši na način da se svakom studentu za svaki termin pridjeli određena vrijednost proporcionalna tomu koliko je taj termin povoljan za studenta. Nakon što su studentu tako
+pridružene vjerojatnosti potrebno je normalizirati dobivenu raspodjelu.
+
+\begin{algorithm}
+  \caption{Izračun inicijalne distribucije}
+  \label{algo:inicijalna_distribucija}
+  \begin{algorithmic}
+
+  \STATE{$inicijalneVrijednosti \leftarrow [][]$ }
+
+  \STATE{$n \leftarrow duljina(Termini)$}
+  \STATE{$m \leftarrow duljina(Studenti)$}
+  \FOR{($i \leftarrow 0; i < n; i \leftarrow i + 1$)}
+    \FOR{($j \leftarrow 0; j < m; j \leftarrow j + 1$)}
+      \STATE{$inicijalneVrijednosti[Termin_i][Student_j] \leftarrow 10$}
+
+      \IF{$Student_{j}.imaKolizijuS(Termin_i) $}
+        \STATE{$inicijalneVrijednosti[Termin_i][Student_j] \leftarrow inicijalneVrijednosti[Termin_i][Student_j] - 8$}
+      \ENDIF
+
+      \IF{$Student_{j}.produljujeTrajanjeDana(Termin_i) $}
+        \STATE{$inicijalneVrijednosti[Termin_i][Student_j] \leftarrow inicijalneVrijednosti[Termin_i][Student_j] - 1$}
+      \ENDIF
+
+      \IF{$Student_{j}.naSlobodanDan(Termin_i) $}
+        \STATE{$inicijalneVrijednosti[Termin_i][Student_j] \leftarrow inicijalneVrijednosti[Termin_i][Student_j] - 1$}
+      \ENDIF
+    \ENDFOR
+  \ENDFOR
+
+  \STATE{$sumaStupaca \leftarrow []$}
+
+  \FOR{($i \leftarrow 0; i < n; i \leftarrow i + 1$)}
+    \FOR{($j \leftarrow 0; j < m; j \leftarrow j + 1$)}
+      \STATE{$sumaStupaca[Student_j] \leftarrow  sumaStupaca[Student_j] +  inicijalneVrijednosti[Termin_i][Student_j]$}
+    \ENDFOR
+  \ENDFOR
+
+  \FOR{($i \leftarrow 0; i < n; i \leftarrow i + 1$)}
+    \FOR{($j \leftarrow 0; j < m; j \leftarrow j + 1$)}
+      \STATE{$distribucija[Termin_i][Student_j] \leftarrow inicijalneVrijednosti[Termin_i][Student_j] / sumaStupaca[Student_j]$}
+    \ENDFOR
+  \ENDFOR
+
+
+
+  \end{algorithmic}
+  \end{algorithm}
+
+
+
+
+\section{Funkcija dodjeljivanja kazne}
+Funkcija dodjeljivanja kazne dodjeljuje kaznu svakom pridruživanju studenata i termina. Ulaz u funkciju je
+lista pridruživanja studenata i termina. Ulazna lista je veličine broja studenata, a svaki element liste predstavlja
+indeks termina koji je pridjeljen studentu na odabranom indeksu liste. Na primjer, neka treba rasporediti pet studenata
+na tri termina laboratorijskih vježbi. Jedan od načina pridruživanja je:
+$$
+[2, 2, 0, 1, 0].
+$$
+Ovakvo pridruživanje označava da su $Student_0$ i $Student_1$ raspoređeni na $Termin_2$,
+$Student_2$ i $Student_4$ na $Termin_0$, a $Student_3$ na $Termin_1$. Izlaz iz funkcije je broj koji označava kaznu
+za predano rješenje.
+
+Prilikom dodjeljivanja kazne uzeta su u obzir tvrda i meka ograničenja navedena na početku poglavlja. Kako bi bilo osigurano
+da algoritam svakako zadovolji tvrda ograničenja, a da na temelju mekih samo fino podešava (engl. $fine tuning$), kazna koja
+se dodjeljuje za kršenje tvrdih ograničenja je dva reda veličina veća od kazne za kršenje mekih ograničenja. Kažnjavanje
+za prepunjavanje termina laboratorijskih vježbi se dodjeljuje kvadratno. Time je postignuto da algoritam ravnomjernije
+raspoređuje studente jer je kazna znatno manja ako su četiri termina prepunjena sa po jednim studentom, nego ako je
+jedan termin prepunjen s 4 studenta. Pseudokod funckije s konkretnim vrijednostima kazni je prikazan na \ref{algo:kazna}.
+
+
+\begin{algorithm}
+\caption{Funkcija dodjeljivanja kazne}
+\label{algo:kazna}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $uzorak$ -- uzorak jednog rješenja.}
+\STATE{\textbf{Izlaz:} kazna za predano rješenje.}
+
+\STATE{$kazna \leftarrow 0$ }
+\STATE{$popunjenost \leftarrow []$ }
+\STATE{$n \leftarrow duljina(Studenti)$}
+\FOR{($i \leftarrow 0; i < n; i \leftarrow i + 1$)}
+  \IF{$Student_{i}.imaKolizijuS(uzorak_i) $}
+  \STATE{$kazna \leftarrow kazna + 80000$}
+  \ENDIF
+  \IF{$Student_{i}.produljujeTrajanjeDana(uzorak_i) $}
+  \STATE{$kazna \leftarrow kazna + 50$}
+  \ENDIF
+  \IF{$Student_{i}.naSlobodanDan(uzorak_i) $}
+  \STATE{$kazna \leftarrow kazna + 50$}
+  \ENDIF
+
+  \STATE{$popunjenost[uzorak_i] \leftarrow popunjenost[uzorak_i] + 1$ }
+\ENDFOR
+
+\STATE{$n \leftarrow duljina(Termini)$}
+\FOR{($i \rightarrow 0; i < n; i \rightarrow i + 1$)}
+  \IF{$ popunjenost[uzorak_i] > Termin_i.maksimalanBrojStudenata() $}
+  \STATE{$kazna \leftarrow kazna + 5000 + koeficijent\_prepunjenja \cdot (popunjenost[uzorak_i] - Termin_i.maksimalanBrojStudenata())^2 $}
+  \ENDIF
+  \IF{$ popunjenost[uzorak_i] < termin_i.minimalanBrojStudenata() $}
+  \STATE{$kazna \leftarrow kazna + 5000 + koeficijent\_prepunjenja \cdot (Termin_i.minimalanBrojStudenata() - popunjenost[uzorak_i])^2 $}
+  \ENDIF
+
+\ENDFOR
+
+\RETURN{kazna}
+\end{algorithmic}
+\end{algorithm}
+
+\section{Heuristike}
+\label{sec:heuristike}
+Kako je problem izrade rasporeda daleko složeniji od problema vodećih jedinica, u algoritam je dodano nekoliko nadogradnji
+kako bi algoritam uspješno rješavao problem izrade rasporeda. Jedna od nadogradnji je dodavanje huristika kojima bi
+se nakon ažuriranja trenutne distribucije relativnom frekvencijom uzorkovanja, ta distribucija još dodatno poboljšala.
+Ideja počiva na tome da algoritam prilikom svoga rada rješenja vrednuje isključivo na temelju vrijednosti koje rješenju
+dodjeli funkcija kazne, a pritom ne zna ništa o domeni problema niti konkretnim razlozima zbog kojeg je rješenje dobilo
+dodjeljenu kaznu. Heuristikama se nastoji modificirati trenutnu distribuciju na temelju spoznaja o konkretnom problemu.
+
+\subsection{Rebalansiranje trenutne distirbucije}
+Kako je u problemu izrade rasporeda laboratorijskih vježbi broj studenata velik, a broj termina u kojima su prostorije
+za izvršavanje laboratorijskih vježbi slobodne znatno manji, čest je slučaj da se u jednom vremenskom terminu održavaju vježbe u dvije
+različite prostorije. U tim situacijama studentu oba termina jednako odgovaraju (jer je jedina razlika prostorija u kojoj
+će laboratorijska vježba biti održana). Iako se iz perspektive studenta dva istovremena termina ne razlikuju, algoritam
+bez heuristike ih smatra potpuno različitima.Zbog toga se može dogoditi da algoritam prepunjuje jedan termin, dok drugi termin
+u isto vrijeme može biti podpunjen.
+
+Dodavanje heuristike koja ravnomjerno rebalansira vjerojatnosti između svih istovremenih
+termina je implementacijski jednostavna, a donosi poboljšanje u radu algoritma. Pseudokod opisane heuristike je prikazan u
+\ref{algo:rebalans}. $IstovremeniTermini$ je mapa kojoj su ključevi termini, a vrijednosti su liste svih istovremenih termina
+(uključujući i sam termin koji je ključ). Na ovaj način se jednostavno može doći do lista svih istovremenih termina (to su sve vrijednosti
+u mapi $IstovremeniTermini$). Izgradnja ovakve mape u programskom jeziku Java prikazano je u \ref{code:labsAtTime}.
+
+\begin{algorithm}
+  \caption{Heuristika rebalansiranja istovremenih termina}
+  \label{algo:rebalans}
+  \begin{algorithmic}
+
+  \STATE{$ListeIstovremenihTermina \leftarrow IstovremeniTermini.vrijednosti()$ }
+  \STATE{$n \leftarrow duljina(Studenti)$}
+  \FOR{($i \leftarrow 0; i < n; i \leftarrow i + 1$)}
+
+    \FOR{($ListaIstovremenihTermina : ListeIstovremenihTermina$)}
+      \STATE{$suma \leftarrow 0$ }
+
+      \FOR{($Termin : ListaIstovremenihTermina$)}
+        \STATE{$suma \leftarrow suma + TrenutnaDistribucija[Termin][Student_i]$ }
+      \ENDFOR
+
+      \STATE{$balansirano \leftarrow suma / duljina(ListaIstovremenihTermina)$ }
+
+      \FOR{($Termin : ListaIstovremenihTermina$)}
+        \STATE{$TrenutnaDistribucija[Termin][Student_i] \leftarrow balansirano$ }
+      \ENDFOR
+    \ENDFOR
+  \ENDFOR
+
+  \end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{lstlisting}[caption={Izrada mape istovremenih termina u programskom jeziku Java},label=code:labsAtTime, language=Java]
+SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+for (int i=0, n=labs.size(); i<n; ++i) {
+  String labTime = timeFormat.format(labs.get(i).getTime().getStart());
+
+  if (!labsAtTime.containsKey(labTime)) {
+      labsAtTime.put(labTime, new ArrayList<>());
+  }
+
+  labsAtTime.get(labTime).add(i);
+}
+\end{lstlisting}
+
+
+
+\subsection{Redistribucija vjerojatnosti prepunjenih termina}
+Kao što je prethodno navedeno, algoritam ne zna na temelju čega se pojedinom rješenju dodjeljuje kazna. Zato je korisno dodati
+heuristiku koja će znati na temelju čega su dodjeljene kazne i djelovati u smjeru da ublaži buduće dodjeljivanje kazni.
+Kako se kvalitetnom inicijalnom distribucijom može jako dobro riješiti problem stvaranja kolizija, algoritmu je dodana heuristika
+koja rješava problem prepunjavanja.
+
+Ideja heuristike je da onim terminima koji su prepunjeni smanji
+vjerojatnost odabiranja prilikom idućeg uzorkovanja. Kako zbroj vjerojatnosti mora uvijek biti jednak jedan, potrebno je
+preostalim terminima koji nisu prepunjeni povećeti vjerojatnost odabiranja. Za koliko će se smanjiti vjerojatnost odabiranja
+pojedinom terminu se određuje tako da se svi prepunjeni termini proporcionalno rasporede na zadani interval. Time se postiže da se terminima
+koji su bili prepopunjeni u više uzoraka vjerojatnost odabiranja smanji intenzivnije nego onim terminima koji su bili prepunjeni
+u manjem broju uzoraka. Implementacija heuristike je prikazana u isječku koda \ref{code:redistribucija}. Varijabla
+$overFilledLabs$ je mapa koja kao ključeve ima indekse prepunjenih termina, a vrijednosti su broj uzoraka u kojima
+je odgovarajući termin bio prepunjen. U početku rada algoritma
+su sva generirana rješenja loša i mnogo je termina prepunjeno te se eksperimentalno pokazalo da je ovu heuristiku korisno početi koristiti u
+kasnijim fazama rada algoritma.
+
+\begin{lstlisting}[caption={Redistribucija vjerojatnosti prepunjenih termina},label=code:redistribucija, language=Java]
+double UPPER_BOUND = 0.05;
+double LOWWER_BOUND = 0.01;
+int maxi = overFilledLabs.values()
+                          .stream()
+                          .mapToInt(Integer::intValue)
+                          .max()
+                          .getAsInt();
+
+for (int j = 0, m = students.size(); j < m; ++j) {
+  double redistribute = 0;
+
+  for (Map.Entry<Integer, Integer> overfiled : overFilledLabs.entrySet()) {
+      double reduceCoff = (((double) overfiled.getValue()) / maxi) * (UPPER_BOUND - LOWWER_BOUND) + LOWWER_BOUND;
+
+      redistribute += currentDistribution[overfiled.getKey()][j] * reduceCoff;
+      currentDistribution[overfiled.getKey()][j] *= (1 - reduceCoff);
+  }
+  double increment = redistribute / (labs.size() - overFilledLabs.size());
+  for (int i = 0, n = labs.size(); i < n; ++i) {
+      if (overFilledLabs.containsKey(i)) continue;
+      currentDistribution[i][j] += increment;
+  }
+}
+\end{lstlisting}
+
+
+\section{Nadogradnje algoritma prioritetnim redom}
+U orginalnom algortimu opisanom u LINK-NA-RAD trenutna distribucija se ažurira isključivo vjerojatnostima dobivenim relativnim
+uzorkovanjem najboljih uzoraka. Takav pristup je uspješan na problemima poput problema vodeće jedinice gdje je velika sličnost
+između distribucija koje su generirale rješenje s jednakom kaznom. Na primjer, ako dvije distribucije generiraju uzorke s početnih
+deset jedinica uzastopno, velika je vjerojatnost da će obje distribucije na prvih deset mjesta imati puno veću vjerojatnost
+za generiranje jedinice, nego za generiranje nule. Zbog toga sva dobra rješenja usmjeruju distribuciju u istom smjeru,
+smjeru u kojem su vjerojatnosti za generiranje jedinice na svim mjestima veće nego za generiranje nule.
+Kod problema izrade rasporeda laboratorijskih vježbi to nije slučaj. Dvije
+distribucije mogu konzistentno generirati rješenja koja će imati isti iznos kazne, a da pritom distribucije budu vrlo različite.
+Tomu je tako jer kod izrade rasporeda postoji puno više rješenja koja su jednako dobra. Jednako su dobra jer prema funkciji
+kazne prikazanoj na \ref{algo:kazna} se u slučaju kada je studentu dodjeljen termin koji mu je unutar rupe u predavanjima
+sporedno koji je to od termina. Dokle god je termin laboratorijske vježbe u rupi između predavanja, studentu je podjednako dobro
+u koji je termin raspoređen. Orginalni algoritam se ne koristi ovom činjenicom, nego ima tendenciju da kada pronađe dobar termin
+za studenta da ga nastoji držati u tom terminu, a možda je povoljnije prebaciti studenta u neki termin koji mu jednako odgovara
+i drugog studenta staviti na njegovo mjesto.
+
+Kako bi se povečala raznovrsnost rješenja koje algoritam uzima u obzir, algoritam je nadopunjen s prioritetnim redom
+koji pamti određen broj najboljih viđenih rješenja. Potom se prilikom ažuriranja distribucije uz relativnu frekvenciju novih uzoraka
+u obzir uzimaju i uzorci iz prioritetnog reda. Kako je red fiksne duljine, jednom kada dosegne svoju maksimalnu veličinu,
+novi element se ubacuje tek ako je bolji od najgoreg rješenja u redu, a najgore rješenje u redu se izbacuje. Baš zbog
+prethodno navedene potrebe da se često pristupa elementu s najvećom kaznom je odabrana struktura prioritetnog reda. Dodavanjem
+prioritetnog reda povečava se količina dobrih rješenja koja algoritam uzima u obzir prilikom ažuriranja trenutne distribucije.
+Da bi se spriječilo da red usporava napredak algoritma zadržavajući ga u lokalnim optimumima, red se periodički potpuno isprazni.
+
+
+
+\section{Rad algoritma}
+Osim prethodno navedenih nadogranja, sama srž algoritma je ostala ista kao i u LINK-NA-RAD. Nakon što se inicijalizira početna
+distribucija započinje petlja u kojoj se uzorkuju novi uzorci, zatim se oni ocjenjuje te se gradi distribucija relativnih
+frekvencija uzoraka s najmanjom kaznom. Nakon što se ternutna distribucija ažurira, provode se heuristike opisane u poglavlju
+\ref{sec:heuristike}. Pseudokod ovog algoritma je prikazan na \ref{algo:rad_algoritma}. Algoritam nastavlja s radom
+sve dok se ne ispuni uvjet zaustavljanja. Uvjeti zaustavljanja mogu biti
+različiti. Jedan od načina da se zaustavi algoritam je da se u vršnom direktoriju projekta stvori datoteka s imenom
+$stop.txt$. Ovakav uvjet zaustavljanja je praktičan kada postoji potreba da se prati kako algoritam napreduje te da ga se prekine
+jednom kada dosegne željenu kvalitetu rasporeda. Ovaj pristup je korišten za vrijeme razvijanja te bi bio pogodan za korištenje
+u produkcijskom okruženju. Za potrebe automatskog vrednovanja je prikladnije algoritam zaustaviti nakon određenog broja iteracija
+ili nakon što iznos kazne najboljeg rješenja dosegne zadanu vrijednost.
+
+
+
+
+\begin{algorithm}
+  \caption{Rad algoritma}
+  \label{algo:rad_algoritma}
+  \begin{algorithmic}
+  \REPEAT
+    \STATE{$uzorci \leftarrow uzorkovanje()$ }
+    \STATE{$relativnaFrekvencija \leftarrow ocjeninjivanje(uzorci)$ }
+    \STATE{$ažuriranje(relativnaFrekvencija)$ }
+    \STATE{$pokreniHeuristike()$ }
+  \UNTIL{$uvjetZaustavljanja()$}
+  \end{algorithmic}
+\end{algorithm}
 
 
 
 
 
-U svim navedenim testovima uvjet zaustavljanja je bio da vjerojatnost p da se na poziciji i uzorkuje jedinica bude veća od 0.999:
-p(1, i) > 0.999, za svaki  i element {0,..., L-1}
-
-
-
-
-za svaku vrijednost je vršeno 30 testova
 
 
 \chapter{Zaključak}
