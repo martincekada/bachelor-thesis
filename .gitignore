@@ -7,3 +7,4 @@ Text/*
 
 !Text/*.pdf
 !Text/*.tex
+!Text/img/*.pdf
