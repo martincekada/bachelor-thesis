@@ -1,0 +1,361 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\usepackage[utf8]{inputenc}
+\usepackage[croatian]{babel}
+\usepackage[T1]{fontenc}
+
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+
+%Information to be included in the title page:
+\title[Obrana završnog rada] %optional
+{Primjena konstruktivnog optimizacijskog algoritma na problem
+rasporeda studenata}
+
+\subtitle{Završni rad br. 6297}
+
+\author[Martin Čekada] % (optional, for multiple authors)
+{Martin Čekada}
+
+\institute[FER] % (optional)
+{
+  Sveučilište u Zagrebu
+
+  Fakultet elektrotehnike i računarstva
+}
+
+\date[Zagreb, Srpanj 2019] % (optional)
+{Zagreb, Srpanj 2019}
+
+\logo{\includegraphics[height=1cm]{FER_logo.pdf}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Sadržaj}
+\tableofcontents
+\end{frame}
+
+\section{Opis algoritma}
+\begin{frame}
+\frametitle{Opis algoritma}
+\begin{itemize}
+  \item Konstruktivni algoritam
+  \item Temeljen na radu \textit{Asymptotic Properties of a Generalized Cross-Entropy Optimization Algorithm} (Wu, Kolonko)
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Primjer}
+  \begin{table}
+    % \caption{Početna distribucija}
+    \centering
+    \begin{tabular}{c | c | c | c }
+       & Student 1 & Student 2 & Student 3  \\ \hline
+      T1 & 0.5 & 0.5 & 0.5 \\ \hline
+      T2 & 0.5 & 0.5 & 0.5
+    \end{tabular}
+  \end{table}
+
+
+  Generirana rješenja: (T1, T1, T2); (T2, T1, T2); (T2, T2, T2)
+
+
+  \begin{table}
+    \centering
+    % \caption{Uzorkovana distribucija}
+    \begin{tabular}{c | c | c | c }
+       & Student 1 & Student 2 & Student 3  \\ \hline
+      T1 & 0.33 & 0.66 & 0 \\ \hline
+      T2 & 0.67 & 0.37 & 1
+    \end{tabular}
+  \end{table}
+
+  Nova distribucija:
+  \begin{table}
+    % \caption{Nova distribucija}
+    \centering
+    \begin{tabular}{c | c | c | c }
+       & Student 1 & Student 2 & Student 3  \\ \hline
+      T1 & 0.415 & 0.585 & 0.75 \\ \hline
+      T2 & 0.585 & 0.415 & 0.25
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}
+\frametitle{Opis algoritma}
+  \begin{columns}[t]
+    \column{0.5\textwidth}
+    \begin{itemize}
+    \item Parametri
+      \begin{itemize}
+        \item $\varrho$ - faktor zaglađivanja
+        % \item $L$ - duljina rješenja
+        \item $N$ - veličina uzorka
+        \item $N_b$ - broj najboljih uzoraka
+      \end{itemize}
+    \end{itemize}
+    \column{0.5\textwidth}
+      \begin{itemize}
+      \item Rad algoritma
+      \begin{itemize}
+        \item Početak
+        \item Uzorkovanje
+        \item Ocjenjivanje
+        \item Ažuriranje
+      \end{itemize}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+
+% \section{Primjena na problem vodećih jedinica}
+% \begin{frame}
+% \frametitle{Primjena na problem vodećih jedinica}
+% \begin{block}{Problem vodećih jedinica (engl. \textit{LeadingOne problem})}
+%   Problem se sastoji od generiranja niza nula i jedinica s ciljem maksimiziranja broja početnih jedinica. Optimalno rješenje je ono u kojem se niz sastoji isključivo od jedinica.
+%   \end{block}
+
+%   \begin{block}{Teorem}
+%     Uz odabir konstantnog parametra izglađivanja $\varrho_t = \varrho$, veličine uzorka $N = L^{(2 + \epsilon)}$, uz $\epsilon > 0$
+%     i $N_b =  \floor{(\beta N)}$ za
+%     $0 < \beta < \frac{1}{3e} \prod^{\infty}_{m=1} (1 - (1 - \varrho)^m)$. Uz početnu distribuciju
+%     $\prod_0(1, i) \equiv \frac{1}{2}$, odnosno jednoliku distribuciju, za prethodno definirani
+%   problem vodeće jedinice vrijedi $\mathbb{P}(\tau < L) \rightarrow 1$ kada $L \rightarrow \infty$.
+%   Pri čemu je $\tau := min \{ t \geq 0 | X_t \cap S^* \neq \emptyset \}$
+%     \end{block}
+% \end{frame}
+
+% \begin{frame}[t]
+% \frametitle{Vrednovanje}
+% \begin{columns}[t]
+%   \column{0.5\textwidth}
+%   \begin{table}[]
+%     \caption{Utjecaj duljine uzorka $L$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
+%     \label{tbl:promjenaL}
+%     \centering
+%     \begin{tabular}{c | c | c | c | c}
+%       $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
+%       10 & 316 & 28 & 0.8 & 6 \\ \hline
+%       20 & 1788 & 160 & 0.8 & 9 \\ \hline
+%       30 & 4929 & 443 & 0.8 & 13 \\ \hline
+%       40 & 10119 & 910 & 0.8 & 16 \\ \hline
+%       50 & 17677 & 1590 & 0.8 & 20 \\ \hline
+%       60 & 27885 & 2509 & 0.8 & 23 \\ \hline
+%       70 & 40996 & 3689 & 0.8 & 26 \\ \hline
+%       80 & 57243 & 5151 & 0.8 & 30 \\ \hline
+%       90 & 76843 & 6915 & 0.8 & 33 \\ \hline
+%       100 & 100000 & 9000 & 0.8 & 37
+%     \end{tabular}
+%   \end{table}
+%   \column{0.5\textwidth}
+%   \begin{table}[]
+%     \caption{Utjecaj parametra izglađivanja $\varrho_t$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
+%     \label{tbl:promjenaQ}
+%     \centering
+%     \begin{tabular}{c | c | c | c | c}
+%       $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
+%       50 & 17677 & 6 & 0.2 & 43 \\ \hline
+%       50 & 17677 & 82 & 0.3 & 33 \\ \hline
+%       50 & 17677 & 279 & 0.4 & 29 \\ \hline
+%       50 & 17677 & 563 & 0.5 & 25 \\ \hline
+%       50 & 17677 & 881 & 0.6 & 23 \\ \hline
+%       50 & 17677 & 1195 & 0.7 & 21 \\ \hline
+%       50 & 17677 & 1483 & 0.8 & 19 \\ \hline
+%       50 & 17677 & 1736 & 0.9 & 18 \\ \hline
+%       50 & 17677 & 1950 & 1.0 & 15
+%     \end{tabular}
+%   \end{table}
+%   \end{columns}
+
+% \end{frame}
+
+
+
+
+\section{Opis problema}
+\begin{frame}
+\frametitle{Opis problema}
+\begin{itemize}
+  \item Skup studenata
+  \item Skup termina
+  \item Funkcija dodjeljivanja kazne
+  \begin{itemize}
+    \item Tvrda ograničenja
+    \item Meka ograničenja
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Nadogradnje algoritma}
+
+\subsection{Inicijalna distribucija}
+\begin{frame}
+\frametitle{Inicijalna distribucija}
+\begin{itemize}
+  \item Želja: spriječiti nastajanje kolizija
+  \item Pri inicijalizaciji rada algoritma je poznat skup studenata i skup termina
+  \item Umjesto uniformne distribucije, smanjiti vjerojatnost pridjeljivanja u kojima nastaju kolizije
+\end{itemize}
+\end{frame}
+
+\subsection{Heuristike}
+\begin{frame}
+\frametitle{Heuristike}
+\begin{itemize}
+  \item Rebalansiranje trenutne distribucije
+  \item Redistribucija vjerojatnosti prepunjenih termina
+\end{itemize}
+\end{frame}
+
+\subsection{Prioritetni red}
+\begin{frame}
+\frametitle{Prioritetni red}
+\begin{itemize}
+  \item Želja: smanjiti specijalizaciju algoritma
+  \item Koeficijent i veličina
+  \item Periodičko pražnjenje reda
+\end{itemize}
+\end{frame}
+
+% \subsection{Prioritetni red}
+\begin{frame}
+\frametitle{Funkcija dodjeljivanja kazne}
+\begin{itemize}
+  \item Za svaku koliziju: $8000$
+  \item Za svaki prepunjeni (analogno i potpunjeni) termin: $5000 + koeficijentPrepunjenja \cdot (popunjenost - maksimalanBrojStudenataZaTermin)^2$
+  \item Za svako produljivanje trajanja dana studentu: $50$
+  \item Za svako pridjeljivanje koje je studentu na slobodan dan: $50$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Utjecaj nadogradnji na rad algoritma}
+\begin{table}
+  \caption{Utjecaj nadogradnji algoritma}
+  \label{tbl:razvoj}
+  \centering
+  \resizebox{\textwidth}{!}{
+  \begin{tabular}{c | c | c | c | c | c | c | c | c | c  }
+    Inicijalna dist. & Prior. red & Rebalansiranje & Redistribuiranje & Prepunjenost & Kolizije & Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
+    $\bot$ & $\bot$ & $\bot$ & $\bot$ & 0 & 2 & 346000 & 425990 & 346000 & 676700 \\ \hline
+    $\top$ & $\bot$ & $\bot$ & $\bot$ & 0 & 0 & 20400 & 20315 & 20050 & 20950 \\ \hline
+    $\top$ & $\top$ & $\bot$ & $\bot$ & 0 & 0 & 19350 & 19265 & 18250 & 20650 \\ \hline
+    $\top$ & $\top$ & $\top$ & $\bot$ & 0 & 0 & 21250 & 24250 & 21250 & 36250 \\ \hline
+    $\top$ & $\top$ & $\top$ & $\top$ & 1 & 0 & 50800 & 49295 & 35550 & 51000
+  \end{tabular}
+  }
+\end{table}
+\end{frame}
+
+
+\section{Rezultati}
+\begin{frame}
+\frametitle{Rezultati}
+
+\begin{table}
+  \caption{Imenovanje problema}
+  \label{tbl:opis_problema}
+  \centering
+  \resizebox{\textwidth}{!}{
+  \begin{tabular}{c | c }
+    $Ime$ & $Opis$    \\ \hline
+    Problem 1 & Laboratorijske vježbe iz Digitalne logike 2018./2019. \\ \hline
+    Problem 2 & Laboratorijske vježbe iz Digitalne logike 2018./2019. \\ \hline
+    Problem 3 & Laboratorijske vježbe iz Digitalne logike 2018./2019. \\ \hline
+    Problem 4 & Laboratorijske vježbe iz Digitalne logike 2018./2019. \\ \hline
+    Problem 5 & Laboratorijske vježbe iz Objektno orijentiranog programiranje 2018./ 2019. \\ \hline
+    Problem 6 & Laboratorijske vježbe iz Objektno orijentiranog programiranje 2018./ 2019.
+  \end{tabular}
+  }
+\end{table}
+
+\begin{table}
+  \caption{Podaci o problemima}
+  \label{tbl:podaci_problema}
+  \centering
+  \resizebox{\textwidth}{!}{
+  \begin{tabular}{c | c | c | c | c | c | c  }
+    $Broj$     &  $Problem 1$ & $Problem 2$ & $Problem 3$ & $Problem 4$ & $Problem 5$ & $Problem 6$ \\ \hline
+    Studenata  &  371       & 372       & 372       & 372       & 515       & 515       \\ \hline
+    Termina    &  27        & 27        & 27        & 27        & 32        & 32        \\ \hline
+    Maksimalno &  14        & 14        & 14        & 14        & 19        & 19        \\ \hline
+    Minimalno  &  0         & 0         & 0         & 0         & 17        & 17
+  \end{tabular}
+  }
+\end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rezultati rasporeda za kolegij Digitalne logike}
+  \begin{itemize}
+    \item $N$ = 300
+    \item $N_b$ = 50
+    \item $\varrho$ = 0.6
+    \item Duljina prioritetnog reda = 50
+    \item Koeficijent prioritetnog reda = 0.3
+  \end{itemize}
+
+  \begin{table}
+    \caption{Rezultati rasporeda za kolegij Digitalne logike}
+    \label{tbl:diglog_300}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{c | c | c | c | c }
+      Ime problema &  Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
+      $Problem1$ & 14900 & 14900 & 14850 & 15000 \\ \hline
+      $Problem2$ & 15500 & 15480 & 15450 & 15500 \\ \hline
+      $Problem3$ & 15600 & 15600 & 15600 & 15600 \\ \hline
+      $Problem4$ & 15400 & 15410 & 15400 & 15450
+    \end{tabular}
+    }
+  \end{table}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Rezultati rasporeda za kolegij Objektno orijentiranog programiranja}
+  \begin{itemize}
+    \item $N$ = 300
+    \item $N_b$ = 50
+    \item $\varrho$ = 0.6
+    \item Duljina prioritetnog reda = 50
+    \item Koeficijent prioritetnog reda = 0.3
+  \end{itemize}
+  \begin{table}
+    \caption{Rezultati rasporeda za kolegij Objektno orijentiranog programiranja}
+    \label{tbl:oop_300}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{c | c | c | c | c }
+      Ime problema &  Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
+      $Problem5$ & 21900 & 27895 & 21900 & 81850 \\ \hline
+      $Problem6$ & 20950 & 20960 & 20950 & 21000
+    \end{tabular}
+    }
+  \end{table}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Zaključak}
+  \begin{itemize}
+    \item Algoritam je uspješno zadovoljio tvrda ograničenja za sve primjere
+    \item Paraleliziranje postupka uzorkovanja i ocjenjivanja
+    \item Redistribucija vjerojatnosti prepunjenih termina
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kraj}
+  \centering
+  \large
+    Hvala na pažnji!
+\end{frame}
+
+
+\end{document}
