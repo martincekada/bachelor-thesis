@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[croatian]{babel}
 \usepackage[T1]{fontenc}
+\usepackage{appendixnumberbeamer}
 
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 
@@ -43,7 +44,8 @@ rasporeda studenata}
 \frametitle{Opis algoritma}
 \begin{itemize}
   \item Konstruktivni algoritam
-  \item Temeljen na radu \textit{Asymptotic Properties of a Generalized Cross-Entropy Optimization Algorithm} (Wu, Kolonko)
+  \item Optimizacijski problem
+  \item Temeljen na radu \textit{Asymptotic Properties of a Generalized Cross-Entropy Optimization Algorithm} (Wu, Kolonko; 2014)
   \end{itemize}
 \end{frame}
 
@@ -69,8 +71,8 @@ rasporeda studenata}
     % \caption{Uzorkovana distribucija}
     \begin{tabular}{c | c | c | c }
        & Student 1 & Student 2 & Student 3  \\ \hline
-      T1 & 0.33 & 0.66 & 0 \\ \hline
-      T2 & 0.67 & 0.37 & 1
+      T1 & 0.33 & 0.67 & 0 \\ \hline
+      T2 & 0.67 & 0.33 & 1
     \end{tabular}
   \end{table}
 
@@ -85,96 +87,6 @@ rasporeda studenata}
     \end{tabular}
   \end{table}
 \end{frame}
-
-\begin{frame}
-\frametitle{Opis algoritma}
-  \begin{columns}[t]
-    \column{0.5\textwidth}
-    \begin{itemize}
-    \item Parametri
-      \begin{itemize}
-        \item $\varrho$ - faktor zaglađivanja
-        % \item $L$ - duljina rješenja
-        \item $N$ - veličina uzorka
-        \item $N_b$ - broj najboljih uzoraka
-      \end{itemize}
-    \end{itemize}
-    \column{0.5\textwidth}
-      \begin{itemize}
-      \item Rad algoritma
-      \begin{itemize}
-        \item Početak
-        \item Uzorkovanje
-        \item Ocjenjivanje
-        \item Ažuriranje
-      \end{itemize}
-      \end{itemize}
-  \end{columns}
-\end{frame}
-
-
-% \section{Primjena na problem vodećih jedinica}
-% \begin{frame}
-% \frametitle{Primjena na problem vodećih jedinica}
-% \begin{block}{Problem vodećih jedinica (engl. \textit{LeadingOne problem})}
-%   Problem se sastoji od generiranja niza nula i jedinica s ciljem maksimiziranja broja početnih jedinica. Optimalno rješenje je ono u kojem se niz sastoji isključivo od jedinica.
-%   \end{block}
-
-%   \begin{block}{Teorem}
-%     Uz odabir konstantnog parametra izglađivanja $\varrho_t = \varrho$, veličine uzorka $N = L^{(2 + \epsilon)}$, uz $\epsilon > 0$
-%     i $N_b =  \floor{(\beta N)}$ za
-%     $0 < \beta < \frac{1}{3e} \prod^{\infty}_{m=1} (1 - (1 - \varrho)^m)$. Uz početnu distribuciju
-%     $\prod_0(1, i) \equiv \frac{1}{2}$, odnosno jednoliku distribuciju, za prethodno definirani
-%   problem vodeće jedinice vrijedi $\mathbb{P}(\tau < L) \rightarrow 1$ kada $L \rightarrow \infty$.
-%   Pri čemu je $\tau := min \{ t \geq 0 | X_t \cap S^* \neq \emptyset \}$
-%     \end{block}
-% \end{frame}
-
-% \begin{frame}[t]
-% \frametitle{Vrednovanje}
-% \begin{columns}[t]
-%   \column{0.5\textwidth}
-%   \begin{table}[]
-%     \caption{Utjecaj duljine uzorka $L$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
-%     \label{tbl:promjenaL}
-%     \centering
-%     \begin{tabular}{c | c | c | c | c}
-%       $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
-%       10 & 316 & 28 & 0.8 & 6 \\ \hline
-%       20 & 1788 & 160 & 0.8 & 9 \\ \hline
-%       30 & 4929 & 443 & 0.8 & 13 \\ \hline
-%       40 & 10119 & 910 & 0.8 & 16 \\ \hline
-%       50 & 17677 & 1590 & 0.8 & 20 \\ \hline
-%       60 & 27885 & 2509 & 0.8 & 23 \\ \hline
-%       70 & 40996 & 3689 & 0.8 & 26 \\ \hline
-%       80 & 57243 & 5151 & 0.8 & 30 \\ \hline
-%       90 & 76843 & 6915 & 0.8 & 33 \\ \hline
-%       100 & 100000 & 9000 & 0.8 & 37
-%     \end{tabular}
-%   \end{table}
-%   \column{0.5\textwidth}
-%   \begin{table}[]
-%     \caption{Utjecaj parametra izglađivanja $\varrho_t$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
-%     \label{tbl:promjenaQ}
-%     \centering
-%     \begin{tabular}{c | c | c | c | c}
-%       $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
-%       50 & 17677 & 6 & 0.2 & 43 \\ \hline
-%       50 & 17677 & 82 & 0.3 & 33 \\ \hline
-%       50 & 17677 & 279 & 0.4 & 29 \\ \hline
-%       50 & 17677 & 563 & 0.5 & 25 \\ \hline
-%       50 & 17677 & 881 & 0.6 & 23 \\ \hline
-%       50 & 17677 & 1195 & 0.7 & 21 \\ \hline
-%       50 & 17677 & 1483 & 0.8 & 19 \\ \hline
-%       50 & 17677 & 1736 & 0.9 & 18 \\ \hline
-%       50 & 17677 & 1950 & 1.0 & 15
-%     \end{tabular}
-%   \end{table}
-%   \end{columns}
-
-% \end{frame}
-
-
 
 
 \section{Opis problema}
@@ -222,37 +134,6 @@ rasporeda studenata}
 \end{itemize}
 \end{frame}
 
-% \subsection{Prioritetni red}
-\begin{frame}
-\frametitle{Funkcija dodjeljivanja kazne}
-\begin{itemize}
-  \item Za svaku koliziju: $8000$
-  \item Za svaki prepunjeni (analogno i potpunjeni) termin: $5000 + koeficijentPrepunjenja \cdot (popunjenost - maksimalanBrojStudenataZaTermin)^2$
-  \item Za svako produljivanje trajanja dana studentu: $50$
-  \item Za svako pridjeljivanje koje je studentu na slobodan dan: $50$
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Utjecaj nadogradnji na rad algoritma}
-\begin{table}
-  \caption{Utjecaj nadogradnji algoritma}
-  \label{tbl:razvoj}
-  \centering
-  \resizebox{\textwidth}{!}{
-  \begin{tabular}{c | c | c | c | c | c | c | c | c | c  }
-    Inicijalna dist. & Prior. red & Rebalansiranje & Redistribuiranje & Prepunjenost & Kolizije & Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
-    $\bot$ & $\bot$ & $\bot$ & $\bot$ & 0 & 2 & 346000 & 425990 & 346000 & 676700 \\ \hline
-    $\top$ & $\bot$ & $\bot$ & $\bot$ & 0 & 0 & 20400 & 20315 & 20050 & 20950 \\ \hline
-    $\top$ & $\top$ & $\bot$ & $\bot$ & 0 & 0 & 19350 & 19265 & 18250 & 20650 \\ \hline
-    $\top$ & $\top$ & $\top$ & $\bot$ & 0 & 0 & 21250 & 24250 & 21250 & 36250 \\ \hline
-    $\top$ & $\top$ & $\top$ & $\top$ & 1 & 0 & 50800 & 49295 & 35550 & 51000
-  \end{tabular}
-  }
-\end{table}
-\end{frame}
-
-
 \section{Rezultati}
 \begin{frame}
 \frametitle{Rezultati}
@@ -293,11 +174,11 @@ rasporeda studenata}
 \begin{frame}
   \frametitle{Rezultati rasporeda za kolegij Digitalne logike}
   \begin{itemize}
-    \item $N$ = 300
-    \item $N_b$ = 50
-    \item $\varrho$ = 0.6
+    \item Veličina uzorka = 300
+    \item Broj najboljih rješenja = 50
     \item Duljina prioritetnog reda = 50
     \item Koeficijent prioritetnog reda = 0.3
+    \item Koeficijent zaglađivanja = 0.6
   \end{itemize}
 
   \begin{table}
@@ -305,44 +186,21 @@ rasporeda studenata}
     \label{tbl:diglog_300}
     \centering
     \resizebox{\textwidth}{!}{
-    \begin{tabular}{c | c | c | c | c }
-      Ime problema &  Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
-      $Problem1$ & 14900 & 14900 & 14850 & 15000 \\ \hline
-      $Problem2$ & 15500 & 15480 & 15450 & 15500 \\ \hline
-      $Problem3$ & 15600 & 15600 & 15600 & 15600 \\ \hline
-      $Problem4$ & 15400 & 15410 & 15400 & 15450
+      \begin{tabular}{c | c | c }
+        Ime problema &  Broj studenata kojima je pridružen optimalan termin & Broj studenata za koje postoji optimalan termin  \\ \hline
+      $Problem1$ & 73 & 207 \\ \hline
+      $Problem2$ & 61 & 210 \\ \hline
+      $Problem3$ & 59 & 204 \\ \hline
+      $Problem4$ & 63 & 216
     \end{tabular}
     }
   \end{table}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Rezultati rasporeda za kolegij Objektno orijentiranog programiranja}
-  \begin{itemize}
-    \item $N$ = 300
-    \item $N_b$ = 50
-    \item $\varrho$ = 0.6
-    \item Duljina prioritetnog reda = 50
-    \item Koeficijent prioritetnog reda = 0.3
-  \end{itemize}
-  \begin{table}
-    \caption{Rezultati rasporeda za kolegij Objektno orijentiranog programiranja}
-    \label{tbl:oop_300}
-    \centering
-    \resizebox{\textwidth}{!}{
-    \begin{tabular}{c | c | c | c | c }
-      Ime problema &  Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
-      $Problem5$ & 21900 & 27895 & 21900 & 81850 \\ \hline
-      $Problem6$ & 20950 & 20960 & 20950 & 21000
-    \end{tabular}
-    }
-  \end{table}
-\end{frame}
-
 
 \begin{frame}
-  \frametitle{Zaključak}
+  \frametitle{Zaključak i daljnji rad}
   \begin{itemize}
     \item Algoritam je uspješno zadovoljio tvrda ograničenja za sve primjere
     \item Paraleliziranje postupka uzorkovanja i ocjenjivanja
@@ -356,6 +214,160 @@ rasporeda studenata}
   \large
     Hvala na pažnji!
 \end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+\appendix
+
+\section{Primjena na problem vodećih jedinica}
+\begin{frame}
+\frametitle{Primjena na problem vodećih jedinica}
+\begin{block}{Problem vodećih jedinica (engl. \textit{LeadingOne problem})}
+  Problem se sastoji od generiranja niza nula i jedinica s ciljem maksimiziranja broja početnih jedinica. Optimalno rješenje je ono u kojem se niz sastoji isključivo od jedinica.
+  \end{block}
+
+  \begin{block}{Teorem}
+    Uz odabir konstantnog parametra izglađivanja $\varrho_t = \varrho$, veličine uzorka $N = L^{(2 + \epsilon)}$, uz $\epsilon > 0$
+    i $N_b =  \floor{(\beta N)}$ za
+    $0 < \beta < \frac{1}{3e} \prod^{\infty}_{m=1} (1 - (1 - \varrho)^m)$. Uz početnu distribuciju
+    $\prod_0(1, i) \equiv \frac{1}{2}$, odnosno jednoliku distribuciju, za prethodno definirani
+  problem vodeće jedinice vrijedi $\mathbb{P}(\tau < L) \rightarrow 1$ kada $L \rightarrow \infty$.
+  Pri čemu je $\tau := min \{ t \geq 0 | X_t \cap S^* \neq \emptyset \}$
+    \end{block}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Vrednovanje}
+\begin{columns}[t]
+  \column{0.5\textwidth}
+  \begin{table}[]
+    \caption{Utjecaj duljine uzorka $L$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
+    \label{tbl:promjenaL}
+    \centering
+    \begin{tabular}{c | c | c | c | c}
+      $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
+      10 & 316 & 28 & 0.8 & 6 \\ \hline
+      20 & 1788 & 160 & 0.8 & 9 \\ \hline
+      30 & 4929 & 443 & 0.8 & 13 \\ \hline
+      40 & 10119 & 910 & 0.8 & 16 \\ \hline
+      50 & 17677 & 1590 & 0.8 & 20 \\ \hline
+      60 & 27885 & 2509 & 0.8 & 23 \\ \hline
+      70 & 40996 & 3689 & 0.8 & 26 \\ \hline
+      80 & 57243 & 5151 & 0.8 & 30 \\ \hline
+      90 & 76843 & 6915 & 0.8 & 33 \\ \hline
+      100 & 100000 & 9000 & 0.8 & 37
+    \end{tabular}
+  \end{table}
+  \column{0.5\textwidth}
+  \begin{table}[]
+    \caption{Utjecaj parametra izglađivanja $\varrho_t$ na broj iteracija ($\epsilon = 0.5$, $\beta = 0.09$)}
+    \label{tbl:promjenaQ}
+    \centering
+    \begin{tabular}{c | c | c | c | c}
+      $L$ & $N$ & $N_b$ & $\varrho$ & $i$ \\ \hline
+      50 & 17677 & 6 & 0.2 & 43 \\ \hline
+      50 & 17677 & 82 & 0.3 & 33 \\ \hline
+      50 & 17677 & 279 & 0.4 & 29 \\ \hline
+      50 & 17677 & 563 & 0.5 & 25 \\ \hline
+      50 & 17677 & 881 & 0.6 & 23 \\ \hline
+      50 & 17677 & 1195 & 0.7 & 21 \\ \hline
+      50 & 17677 & 1483 & 0.8 & 19 \\ \hline
+      50 & 17677 & 1736 & 0.9 & 18 \\ \hline
+      50 & 17677 & 1950 & 1.0 & 15
+    \end{tabular}
+  \end{table}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Rezultati rasporeda za kolegij Objektno orijentiranog programiranja}
+  \begin{itemize}
+    \item Veličina uzorka = 300
+    \item Broj najboljih rješenja = 50
+    \item Duljina prioritetnog reda = 50
+    \item Koeficijent prioritetnog reda = 0.3
+    \item Koeficijent zaglađivanja = 0.6
+  \end{itemize}
+  \begin{table}
+    \caption{Rezultati rasporeda za kolegij Objektno orijentiranog programiranja}
+    \label{tbl:oop_300}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{c | c | c }
+      Ime problema &  Broj studenata kojima je pridružen optimalan termin & Broj studenata za koje postoji optimalan termin  \\ \hline
+      $Problem5$ & 77 & 278 \\ \hline
+      $Problem6$ & 76 & 219
+    \end{tabular}
+    }
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Funkcija dodjeljivanja kazne}
+  \begin{itemize}
+    \item Za svaku koliziju: $8000$
+    \item Za svaki prepunjeni (analogno i potpunjeni) termin: $5000 + koeficijentPrepunjenja \cdot (popunjenost - maksimalanBrojStudenataZaTermin)^2$
+    \item Za svako produljivanje trajanja dana studentu: $50$
+    \item Za svako pridjeljivanje koje je studentu na slobodan dan: $50$
+  \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Utjecaj nadogradnji na rad algoritma}
+  \begin{table}
+    \caption{Utjecaj nadogradnji algoritma}
+    \label{tbl:razvoj}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{c | c | c | c | c | c | c | c | c | c  }
+      Inicijalna dist. & Prior. red & Rebalansiranje & Redistribuiranje & Prepunjenost & Kolizije & Medijan & Srednja vrijednost & Najmanji & Najveći \\ \hline
+      $\bot$ & $\bot$ & $\bot$ & $\bot$ & 0 & 2 & 346000 & 425990 & 346000 & 676700 \\ \hline
+      $\top$ & $\bot$ & $\bot$ & $\bot$ & 0 & 0 & 20400 & 20315 & 20050 & 20950 \\ \hline
+      $\top$ & $\top$ & $\bot$ & $\bot$ & 0 & 0 & 19350 & 19265 & 18250 & 20650 \\ \hline
+      $\top$ & $\top$ & $\top$ & $\bot$ & 0 & 0 & 21250 & 24250 & 21250 & 36250 \\ \hline
+      $\top$ & $\top$ & $\top$ & $\top$ & 1 & 0 & 50800 & 49295 & 35550 & 51000
+    \end{tabular}
+    }
+  \end{table}
+  \end{frame}
+
+\begin{frame}
+  \frametitle{Opis algoritma}
+    \begin{columns}[t]
+      \column{0.5\textwidth}
+      \begin{itemize}
+      \item Parametri
+        \begin{itemize}
+          \item $\varrho$ - faktor zaglađivanja
+          % \item $L$ - duljina rješenja
+          \item $N$ - veličina uzorka
+          \item $N_b$ - broj najboljih uzoraka
+        \end{itemize}
+      \end{itemize}
+      \column{0.5\textwidth}
+        \begin{itemize}
+        \item Rad algoritma
+        \begin{itemize}
+          \item Početak
+          \item Uzorkovanje
+          \item Ocjenjivanje
+          \item Ažuriranje
+        \end{itemize}
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+
 
 
 \end{document}
